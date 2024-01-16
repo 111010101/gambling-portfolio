@@ -1,12 +1,18 @@
-import { IReel, IReelSymbol, IStore } from '../interfaces/interfaces';
+import { IReelData, IStore, ReelSymbolData } from '../interfaces/interfaces';
+import { COUNT_OF_REELS, REEL_CORDS, TEXTURES } from '../constants/constants';
+import { observable, computed } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 
-export class ReelStore implements IStore {
+class ReelStore implements IStore {
+  public countOfReels: number
 
-  private countOfReels: number
-
-  private _reels: IReel[]
+  @observable
+  public _textures: string[]
+  private _reels: IReelData[]
 
   constructor(textures: string[], countOfReels: number, { x, y }: { x: number, y: number}) {
+    makeAutoObservable(this, undefined, { deep: true })
+    this._textures = textures
     this.countOfReels = countOfReels
     this._reels = [...new Array(countOfReels)].map((_, index) => {
       return {
@@ -21,12 +27,16 @@ export class ReelStore implements IStore {
   public update(): Promise<void> {
    return Promise.resolve()
   }
-
   get reels() {
     return this._reels
   }
 
-  private getShuffledReelSymbols(textures: string[], x: number, y: number): IReelSymbol[] {
+  @computed
+  get textures() {
+    return this._textures.slice().sort(() => Math.random() - 0.5)
+  }
+
+  private getShuffledReelSymbols(textures: string[], x: number, y: number): ReelSymbolData[] {
     return textures.slice()
       .sort(() => Math.random() - 0.5)
       .map(texture => {
@@ -39,3 +49,5 @@ export class ReelStore implements IStore {
   }
 
 }
+
+export const reelStore = new ReelStore(TEXTURES, COUNT_OF_REELS, REEL_CORDS)

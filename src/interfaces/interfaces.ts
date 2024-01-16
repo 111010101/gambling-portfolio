@@ -1,16 +1,16 @@
 import { State } from '../types/types';
 
-export interface IReelSymbol {
+export type ReelSymbolData = {
   x: number
   y: number
   texture: string
 }
 
-export interface IReel {
+export interface IReelData {
   x: number
   y: number
   index: number
-  symbols: IReelSymbol[]
+  symbols: ReelSymbolData[]
 }
 
 export interface IStore {
