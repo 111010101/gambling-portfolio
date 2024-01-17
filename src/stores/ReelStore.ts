@@ -17,9 +17,9 @@ class ReelStore implements IStore {
     this._reels = [...new Array(countOfReels)].map((_, index) => {
       return {
         x: x * index,
-        symbols: this.getShuffledReelSymbols(textures, x, y),
+        symbols: this.getShuffledReelSymbols(textures, x * index, y),
         index,
-        y: 0,
+        y: y * index,
       }
     })
   }

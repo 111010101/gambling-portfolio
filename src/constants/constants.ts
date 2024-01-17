@@ -10,5 +10,5 @@ export const COUNT_OF_REELS = 4
 
 export const REEL_CORDS = {
   x: 200,
-  y: 100,
+  y: 200,
 }

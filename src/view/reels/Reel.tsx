@@ -6,6 +6,7 @@ import { Symbol } from './Symbol';
 
 export const Reel = observer((props: { textures: string[], x: number, y: number }): JSX.Element => {
   const { x, y, textures } = props;
+  console.error(y)
   return (
     <Container x={x} >
       {textures.map((texture, i) => {

@@ -6,15 +6,19 @@ import { Reels } from './view/reels/Reels';
 const App = () => {
 
   return (
-    <Stage options={ { backgroundColor: 0xFFFFFF } } width={1920} height={1080}>
-      <Container>
+    <Stage options={{ backgroundColor: 0xFFFFFF }} width={1920} height={1080}>
+      <Container scale={{x: 0.7, y: 0.7}}>
         <Sprite
           image="border.png"
-          x={400}
-          y={270}
+          x={1920 / 2}
+          y={1080 / 2}
           anchor={{ x: 0.5, y: 0.5 }}
         />
-        <Reels key={Math.random()}/>
+        <Reels
+          scale={{ x: 0.8, y: 0.8 }}
+          reelsY={275}
+          reelsX={640}
+        />
       </Container>
 
       {/*<Sprite*/}
