@@ -1,12 +1,17 @@
 import { State } from '../types/types';
 import { StateData } from '../interfaces/interfaces';
 
-export class FSMObserver {
+class FSMObserver {
 
   private states: State[] = []
   private subscribers: StateData[] = []
+  private currentState: State = 'IdleState'
 
   public async dispatch(states: State[]): Promise<void> {
+    if (states.includes(this.currentState)) {
+      return;
+    }
+    this.currentState = states[0]
     return states.reduce((promise: Promise<void>, state) => {
       return promise.then(() => this.updateStateData(state))
     }, Promise.resolve())
@@ -30,3 +35,5 @@ export class FSMObserver {
       .then(() => this.dispatch([nextState]))
   }
 }
+
+export const FSM = new FSMObserver()

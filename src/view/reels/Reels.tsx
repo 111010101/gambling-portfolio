@@ -21,7 +21,7 @@ export const Reels = observer(({ reelsX, reelsY, scale }: IReelsProps): JSX.Elem
       return [x, y]
     })
   return (
-    <Container scale={scale} x={reelsX} y={reelsY} mask={getMask(1020, 580, 0, 0)}>
+    <Container scale={scale} x={reelsX} y={reelsY} mask={getMask(1020, 670, 0, -100)}>
       <Reel textures={reelStore.textures} x={x1} y={y1} key={key1}/>
       <Reel textures={reelStore.textures} x={x2} y={y2} key={key2}/>
       <Reel textures={reelStore.textures} x={x3} y={y3} key={key3}/>

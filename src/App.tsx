@@ -1,13 +1,12 @@
-import { BlurFilter } from 'pixi.js';
-import { Stage, Container, Sprite, Text } from '@pixi/react';
-import { useMemo } from 'react';
+import { Stage, Container, Sprite } from '@pixi/react';
 import { Reels } from './view/reels/Reels';
+import { FSM } from './FSM/FSMObserber';
 
 const App = () => {
 
   return (
-    <Stage options={{ backgroundColor: 0xFFFFFF }} width={1920} height={1080}>
-      <Container scale={{x: 0.7, y: 0.7}}>
+    <Stage options={{ backgroundColor: 0xFFFFFF }} width={1920 / 1.5} height={1080}>
+      <Container scale={{x: 0.7, y: 0.7}} anchor={0.5}>
         <Sprite
           image="border.png"
           x={1920 / 2}
@@ -21,18 +20,17 @@ const App = () => {
         />
       </Container>
 
-      {/*<Sprite*/}
-      {/*  image="lemon.png"*/}
-      {/*  x={400}*/}
-      {/*  y={270}*/}
-      {/*  width={512}*/}
-      {/*  height={512}*/}
-      {/*  anchor={{ x: 0.5, y: 0.5 }}*/}
-      {/*/>*/}
-
-      {/*<Container x={400} y={330}>*/}
-      {/*  <Text alpha={0} text="Hello World" anchor={{ x: 0.5, y: 0.5 }} filters={[blurFilter]} />*/}
-      {/*</Container>*/}
+      <Sprite
+        interactive={true}
+        cursor={'pointer'}
+        onclick={() => FSM.dispatch(['SpinState'])}
+        image="spin.png"
+        x={1920 / 2.77}
+        y={750}
+        width={256}
+        height={256}
+        anchor={{ x: 0.5, y: 0.5 }}
+      />
     </Stage>
   );
 };

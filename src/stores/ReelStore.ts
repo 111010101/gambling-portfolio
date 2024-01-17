@@ -2,6 +2,8 @@ import { IReelData, IStore, ReelSymbolData } from '../interfaces/interfaces';
 import { COUNT_OF_REELS, REEL_CORDS, TEXTURES } from '../constants/constants';
 import { observable, computed } from 'mobx';
 import { makeAutoObservable } from 'mobx';
+import { gsap } from "gsap";
+import { State } from '../types/types';
 
 class ReelStore implements IStore {
   public countOfReels: number
@@ -12,6 +14,7 @@ class ReelStore implements IStore {
 
   constructor(textures: string[], countOfReels: number, { x, y }: { x: number, y: number}) {
     makeAutoObservable(this, undefined, { deep: true })
+    console.error(this)
     this._textures = textures
     this.countOfReels = countOfReels
     this._reels = [...new Array(countOfReels)].map((_, index) => {
@@ -24,8 +27,32 @@ class ReelStore implements IStore {
     })
   }
 
-  public update(): Promise<void> {
-   return Promise.resolve()
+  public async update(state: State): Promise<void> {
+    switch (state) {
+      case 'SpinState':
+        return this.spinReels()
+    }
+    return Promise.resolve()
+  }
+
+  private spinReels(): void {
+    this.reels.forEach((_, reelIndex) => this.spinReel(reelIndex))
+  }
+
+  public spinReel(reelIndex: number, spinDuration: number = 2): void {
+    const reel = this._reels[reelIndex];
+    const deltaY = 200
+
+    reel.symbols.forEach(symbol => {
+      gsap.to(symbol, {
+        y: symbol.y + deltaY,
+        duration: spinDuration,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          this.spinReel(reelIndex)
+        }
+      });
+    });
   }
   get reels() {
     return this._reels

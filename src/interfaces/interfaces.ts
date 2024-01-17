@@ -14,7 +14,7 @@ export interface IReelData {
 }
 
 export interface IStore {
-  update: (callback: () => Promise<State>) => Promise<void>
+  update: (state: State) => Promise<void>
 }
 
 export type StateData = { callback: Function, state: State, store: IStore, nextState: State }
