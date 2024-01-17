@@ -1,16 +1,22 @@
 import { observer } from 'mobx-react-lite';
 import { JSX } from 'react';
 import { Container } from '@pixi/react';
-import { ReelSymbolData } from '../../interfaces/interfaces';
+import { IReelData, ReelSymbolData } from '../../interfaces/interfaces';
 import { Symbol } from './Symbol';
+import { reelStore } from '../../stores/ReelStore';
+interface IReelProps {
+  textures: string[],
+  x: number,
+  y: number
+  reelData: ReelSymbolData[]
+}
 
-export const Reel = observer((props: { textures: string[], x: number, y: number }): JSX.Element => {
-  const { x, y, textures } = props;
-  console.error(y)
+export const Reel = observer((props: IReelProps): JSX.Element => {
+  const { x, y, textures, reelData } = props;
   return (
     <Container x={x} >
-      {textures.map((texture, i) => {
-        return <Symbol texture={texture} y={y * i} key={Math.random()} />
+      {reelData.map((data) => {
+        return <Symbol texture={data.texture} y={data.y} key={Math.random()} />
       })}
     </Container>
   )

@@ -14,6 +14,7 @@ interface IReelsProps {
 
 export const Reels = observer(({ reelsX, reelsY, scale }: IReelsProps): JSX.Element => {
   const [key1, key2, key3, key4] = reelStore.reels.map(({ index }) => (1 + index) * Math.random())
+  const [rData1, rData2, rData3, rData4] = reelStore.reels
   const [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = reelStore
     .reels
     .map(({ symbols }, index) => {
@@ -22,10 +23,10 @@ export const Reels = observer(({ reelsX, reelsY, scale }: IReelsProps): JSX.Elem
     })
   return (
     <Container scale={scale} x={reelsX} y={reelsY} mask={getMask(1020, 670, 0, -100)}>
-      <Reel textures={reelStore.textures} x={x1} y={y1} key={key1}/>
-      <Reel textures={reelStore.textures} x={x2} y={y2} key={key2}/>
-      <Reel textures={reelStore.textures} x={x3} y={y3} key={key3}/>
-      <Reel textures={reelStore.textures} x={x4} y={y4} key={key4}/>
+      <Reel reelData={rData1.symbols} textures={reelStore.textures} x={x1} y={y1} key={key1}/>
+      <Reel reelData={rData2.symbols} textures={reelStore.textures} x={x2} y={y2} key={key2}/>
+      <Reel reelData={rData3.symbols} textures={reelStore.textures} x={x3} y={y3} key={key3}/>
+      <Reel reelData={rData4.symbols} textures={reelStore.textures} x={x4} y={y4} key={key4}/>
     </Container>
   )
 })

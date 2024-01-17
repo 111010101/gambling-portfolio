@@ -1,6 +1,7 @@
 import { Stage, Container, Sprite } from '@pixi/react';
 import { Reels } from './view/reels/Reels';
 import { FSM } from './FSM/FSMObserber';
+import { reelStore } from './stores/ReelStore';
 
 const App = () => {
 
@@ -14,16 +15,16 @@ const App = () => {
           anchor={{ x: 0.5, y: 0.5 }}
         />
         <Reels
-          scale={{ x: 0.8, y: 0.8 }}
+          scale={{ x: 0.67, y: 0.72 }}
           reelsY={275}
-          reelsX={640}
+          reelsX={639}
         />
       </Container>
 
       <Sprite
         interactive={true}
         cursor={'pointer'}
-        onclick={() => FSM.dispatch(['SpinState'])}
+        onclick={() => reelStore.spin()}
         image="spin.png"
         x={1920 / 2.77}
         y={750}
