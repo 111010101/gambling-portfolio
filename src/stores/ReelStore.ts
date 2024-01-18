@@ -1,12 +1,13 @@
 import { IReelData, IStore, ReelSymbolData } from '../interfaces/interfaces';
 import { COUNT_OF_REELS, REEL_CORDS, TEXTURES } from '../constants/constants';
-import { observable, computed, action } from 'mobx';
+import { observable, action } from 'mobx';
 import { makeAutoObservable } from 'mobx';
 import { gsap } from "gsap";
 import { State } from '../types/types';
+import { BlurFilter } from 'pixi.js';
 
 class ReelStore implements IStore {
-  readonly countOfSpin = 20
+  readonly filterStrength = 4
   public countOfReels: number
 
   @observable
@@ -14,9 +15,13 @@ class ReelStore implements IStore {
   @observable
   private readonly _reels: IReelData[]
 
+  @observable
+  private _filters: BlurFilter[] | null
+  private blurFilter: BlurFilter = new BlurFilter(this.filterStrength)
+
   constructor(textures: string[], countOfReels: number, { x, y }: { x: number, y: number}) {
     makeAutoObservable(this, undefined, { deep: true })
-    console.error(this)
+    this._filters = null
     this._textures = textures
     this.countOfReels = countOfReels
     this._reels = [...new Array(countOfReels)].map((_, index) => {
@@ -37,55 +42,37 @@ class ReelStore implements IStore {
     return Promise.resolve()
   }
 
-  async spin(): Promise<void> {
-    this.spinReels()
-    await this.wait(150)
-    this.spinReels()
-    await this.wait(150)
-    this.spinReels()
-    await this.wait(150)
-    this.spinReels()
-    await this.wait(150)
-    this.spinReels()
-    await this.wait(150)
-    this.spinReels()
-    await this.wait(150)
-    this.spinReels()
-    await this.wait(150)
-    this.spinReels()
-    await this.wait(150)
+  private async spin(reelIndex: number): Promise<void> {
+    setTimeout(() => {
+      this.setFilter([this.blurFilter])
+      this.spinReel(reelIndex)
+    }, reelIndex * 200)
   }
 
-  public spinReels(): void {
-    this.reels.forEach((_, reelIndex) => {
-      setTimeout(() => {
-        this.spinReel(reelIndex)
-        //resolve(void 0)
-      }, reelIndex * 10)
-    })
+  public async spinReels(): Promise<void> {
 
-    // ;[...new Array(this.countOfSpin)].reduce((promise, index) => {
-    //   return promise.then(() => new Promise(resolve => {
-    //     this.reels.forEach((_, reelIndex) => {
-    //       setTimeout(() => {
-    //         this.spinReel(reelIndex)
-    //         resolve(void 0)
-    //       }, reelIndex * 10)
-    //     })
-    //   }))
-    // }, Promise.resolve())
+    await this.reels.reduce((promise, _, reelIndex) => {
 
+      return promise
+        .then(() => this.spin(reelIndex))
+
+    }, Promise.resolve())
   }
 
-  private spinReel(reelIndex: number, spinDuration: number = 0.1): void {
+
+
+  private spinReel(reelIndex: number, spinDuration: number = 0.2): void {
     const reel = this._reels[reelIndex];
     const symbolHeight = 240; // Высота одного символа
-    const reelHeight = 240 * 4; // Общая высота барабана
+    const reelHeight = 240 * 5; // Общая высота барабана
 
     reel.symbols.forEach(symbol => {
       gsap.to(symbol, {
-        y: "+=" + symbolHeight, // Сдвиг вниз на высоту одного символа
+        y: "+=" + symbolHeight, // Shift down by one symbol height
         duration: spinDuration,
+        scale: 2,
+        repeat: 10,
+        yoyo: true,
         ease: "power2.inOut",
         onComplete: () => {
           const symbol = reel.symbols.reduce((previousValue, currentValue) => {
@@ -94,36 +81,22 @@ class ReelStore implements IStore {
             }
             return previousValue
           })
-          // console.error(symbol)
-          // symbol.y -= reelHeight; // Перемещаем символ в начало
           if (symbol.y >= reelHeight) {
-            symbol.y -= reelHeight; // Перемещаем символ в начало
+            symbol.y -= reelHeight; // Move the symbol to the beginning
+            symbol.texture = this.textures.slice().sort(() => Math.random() - 0.5)[0]
           }
+          this.setFilter([])
         }
       });
     });
   }
 
   // public spinReel(reelIndex: number, spinDuration: number = 2): void {
-  //   const reel = this._reels[reelIndex];
-  //   const deltaY = 240
-  //
-  //   reel.symbols.forEach(symbol => {
-  //     gsap.to(symbol, {
-  //       y: symbol.y + deltaY,
-  //       duration: spinDuration,
-  //       ease: 'power2.inOut',
-  //       onComplete: () => {
-  //
-  //       },
-  //     });
-  //   });
-  // }
+
   get reels() {
     return this._reels
   }
 
-  @computed
   get textures() {
     return this._textures.slice().sort(() => Math.random() - 0.5)
   }
@@ -132,13 +105,22 @@ class ReelStore implements IStore {
     return textures.concat(textures[0]).slice()
       .sort(() => Math.random() - 0.5)
       .map((texture, i) => {
-        const index = i - 1;
         return {
           x: x,
           y: y * i,
           texture,
         }
       })
+  }
+
+  @observable
+  get filters() {
+    return this._filters
+  }
+
+  @action
+  setFilter = (filter: BlurFilter[] | null) => {
+    this._filters = filter
   }
 
   wait(ms: number): Promise<void> {

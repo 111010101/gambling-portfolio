@@ -4,19 +4,19 @@ import { Container } from '@pixi/react';
 import { IReelData, ReelSymbolData } from '../../interfaces/interfaces';
 import { Symbol } from './Symbol';
 import { reelStore } from '../../stores/ReelStore';
+import { BlurFilter, Filter } from 'pixi.js';
 interface IReelProps {
-  textures: string[],
   x: number,
-  y: number
   reelData: ReelSymbolData[]
+  filter: BlurFilter[] | null
 }
 
 export const Reel = observer((props: IReelProps): JSX.Element => {
-  const { x, y, textures, reelData } = props;
+  const { x, reelData, filter } = props;
   return (
     <Container x={x} >
       {reelData.map((data) => {
-        return <Symbol texture={data.texture} y={data.y} key={Math.random()} />
+        return <Symbol texture={data.texture}  filters={filter} y={data.y} key={Math.random()} />
       })}
     </Container>
   )

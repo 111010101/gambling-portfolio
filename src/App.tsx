@@ -24,7 +24,7 @@ const App = () => {
       <Sprite
         interactive={true}
         cursor={'pointer'}
-        onclick={() => reelStore.spin()}
+        onclick={() => reelStore.spinReels()}
         image="spin.png"
         x={1920 / 2.77}
         y={750}

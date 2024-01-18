@@ -23,10 +23,10 @@ export const Reels = observer(({ reelsX, reelsY, scale }: IReelsProps): JSX.Elem
     })
   return (
     <Container scale={scale} x={reelsX} y={reelsY} mask={getMask(1020, 670, 0, -100)}>
-      <Reel reelData={rData1.symbols} textures={reelStore.textures} x={x1} y={y1} key={key1}/>
-      <Reel reelData={rData2.symbols} textures={reelStore.textures} x={x2} y={y2} key={key2}/>
-      <Reel reelData={rData3.symbols} textures={reelStore.textures} x={x3} y={y3} key={key3}/>
-      <Reel reelData={rData4.symbols} textures={reelStore.textures} x={x4} y={y4} key={key4}/>
+      <Reel reelData={rData1.symbols} filter={reelStore.filters}  x={x1} key={key1}/>
+      <Reel reelData={rData2.symbols} filter={reelStore.filters} x={x2} key={key2}/>
+      <Reel reelData={rData3.symbols} filter={reelStore.filters} x={x3}  key={key3}/>
+      <Reel reelData={rData4.symbols} filter={reelStore.filters} x={x4}  key={key4}/>
     </Container>
   )
 })
