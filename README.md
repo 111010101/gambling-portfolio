@@ -1,6 +1,8 @@
 # Getting Started
 
-In the project directory, you can run:
+YO-YO Reels (just for fun)
+
+In the project directory, you may use:
 
 ### `npm i`
 ### `npm start`
