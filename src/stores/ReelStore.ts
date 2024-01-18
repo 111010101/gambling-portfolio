@@ -70,9 +70,9 @@ class ReelStore implements IStore {
       gsap.to(symbol, {
         y: "+=" + symbolHeight, // Shift down by one symbol height
         duration: spinDuration,
-        scale: 2,
+        //scale: 2,
         repeat: 10,
-        yoyo: true,
+        //yoyo: true,
         ease: "power2.inOut",
         onComplete: () => {
           const symbol = reel.symbols.reduce((previousValue, currentValue) => {

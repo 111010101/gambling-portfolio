@@ -8,16 +8,16 @@ const App = () => {
   return (
     <Stage options={{ backgroundColor: 0xFFFFFF }} width={1920 / 1.5} height={1080}>
       <Container scale={{x: 0.7, y: 0.7}} anchor={0.5}>
+        <Reels
+          scale={{ x: 0.67, y: 0.72 }}
+          reelsY={-80}
+          reelsX={639}
+        />
         <Sprite
           image="border.png"
           x={1920 / 2}
-          y={1080 / 2}
+          y={1080 / 2 - 40}
           anchor={{ x: 0.5, y: 0.5 }}
-        />
-        <Reels
-          scale={{ x: 0.67, y: 0.72 }}
-          reelsY={275}
-          reelsX={639}
         />
       </Container>
 
