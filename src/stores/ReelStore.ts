@@ -3,12 +3,17 @@ import { COUNT_OF_REELS, REEL_CORDS, TEXTURES } from '../constants/constants';
 import { observable, action } from 'mobx';
 import { makeAutoObservable } from 'mobx';
 import { gsap } from "gsap";
-import { State } from '../types/types';
+import { PointCords, State } from '../types/types';
 import { BlurFilter } from 'pixi.js';
 
 class ReelStore implements IStore {
   readonly filterStrength = 4
   public countOfReels: number
+
+  @observable
+  public isSpinProgress: boolean = false
+  @observable
+  public isIdle: boolean = true
 
   @observable
   public _textures: string[]
@@ -17,9 +22,9 @@ class ReelStore implements IStore {
 
   @observable
   private _filters: BlurFilter[] | null
-  private blurFilter: BlurFilter = new BlurFilter(this.filterStrength)
+  private _blurFilter: BlurFilter = new BlurFilter(this.filterStrength)
 
-  constructor(textures: string[], countOfReels: number, { x, y }: { x: number, y: number}) {
+  constructor(textures: string[], countOfReels: number, { x, y }: PointCords) {
     makeAutoObservable(this, undefined, { deep: true })
     this._filters = null
     this._textures = textures
@@ -44,18 +49,16 @@ class ReelStore implements IStore {
 
   private async spin(reelIndex: number): Promise<void> {
     setTimeout(() => {
-      this.setFilter([this.blurFilter])
+      this.setSpinProgress(true)
+      this.setFilter([this._blurFilter])
       this.spinReel(reelIndex)
     }, reelIndex * 200)
   }
 
   public async spinReels(): Promise<void> {
-
     await this.reels.reduce((promise, _, reelIndex) => {
-
       return promise
         .then(() => this.spin(reelIndex))
-
     }, Promise.resolve())
   }
 
@@ -83,15 +86,14 @@ class ReelStore implements IStore {
           })
           if (symbol.y >= reelHeight) {
             symbol.y -= reelHeight; // Move the symbol to the beginning
-            symbol.texture = this.textures.slice().sort(() => Math.random() - 0.5)[0]
+            symbol.texture = this.textures.slice().sort(() => Math.random() - 0.5)[0] // get random texture
           }
           this.setFilter([])
+          this.setSpinProgress(false)
         }
       });
     });
   }
-
-  // public spinReel(reelIndex: number, spinDuration: number = 2): void {
 
   get reels() {
     return this._reels
@@ -123,12 +125,12 @@ class ReelStore implements IStore {
     this._filters = filter
   }
 
-  wait(ms: number): Promise<void> {
-    return new Promise(resolve => {
-      setTimeout(resolve, ms)
-    })
+  @action
+  setSpinProgress = (isSpinProgress: boolean) => {
+    this.isSpinProgress = isSpinProgress
+    this.isIdle = !isSpinProgress
   }
 
 }
 
-export const reelStore = new ReelStore(TEXTURES, COUNT_OF_REELS, REEL_CORDS)
+export const reelStore = new ReelStore(TEXTURES.slice(), COUNT_OF_REELS, REEL_CORDS)
