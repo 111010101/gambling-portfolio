@@ -1,14 +1,13 @@
 # Getting Started
 
-YO-YO Reels (just for fun)
+Simple Demo Reels
 
-In the project directory, you may use:
+In the project directory, start to use:
 
 ### `npm i`
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Runs the app in the development mode.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
