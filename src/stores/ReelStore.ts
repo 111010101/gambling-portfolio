@@ -7,7 +7,7 @@ import { PointCords, State } from '../types/types';
 import { BlurFilter } from 'pixi.js';
 
 class ReelStore implements IStore {
-  readonly filterStrength = 4
+  readonly filterStrength = 2
   public countOfReels: number
 
   @observable
@@ -50,9 +50,8 @@ class ReelStore implements IStore {
   private async spin(reelIndex: number): Promise<void> {
     setTimeout(() => {
       this.setSpinProgress(true)
-      this.setFilter([this._blurFilter])
       this.spinReel(reelIndex)
-    }, reelIndex * 200)
+    }, reelIndex * 20)
   }
 
   public async spinReels(): Promise<void> {
@@ -69,14 +68,50 @@ class ReelStore implements IStore {
     const symbolHeight = 240; // Высота одного символа
     const reelHeight = 240 * 5; // Общая высота барабана
 
-    reel.symbols.forEach(symbol => {
+    reel.symbols.forEach(async (symbol) => {
+      await this.symbolEase(symbol, 'up')
+      await this.spinSymbol(reel, symbol, symbolHeight, reelHeight, spinDuration)
+      await this.symbolEase(symbol, 'down')
+    });
+  }
+
+  symbolEase(symbol: ReelSymbolData, direction: 'up' | 'down'): Promise<void> {
+    return new Promise(onComplete => {
+      const y = direction === 'up' ? -20 : 20
+      const ease = direction === 'up' ? 'back.in' : 'back.out'
+      gsap.to(symbol, {
+        y: '+=' + y,
+        duration: 0.4,
+        ease,
+        onComplete() {
+          if (direction === 'down') {
+            gsap.to(symbol, {
+              y: '+=' + -y,
+              duration: 0.4,
+              ease: 'back.in',
+              onComplete,
+            })
+          } else {
+            onComplete()
+          }
+        },
+      })
+    })
+  }
+
+  spinSymbol(
+    reel: IReelData,symbol: ReelSymbolData,
+    symbolHeight: number,
+    reelHeight: number,
+    duration: number,
+  ): Promise<void> {
+    return new Promise(resolve => {
+      this.setFilter([this._blurFilter])
       gsap.to(symbol, {
         y: "+=" + symbolHeight, // Shift down by one symbol height
-        duration: spinDuration,
-        //scale: 2,
-        repeat: 10,
-        //yoyo: true,
+        duration,
         ease: "power2.inOut",
+        repeat: 10,
         onComplete: () => {
           const symbol = reel.symbols.reduce((previousValue, currentValue) => {
             if (previousValue.y < currentValue.y) {
@@ -86,13 +121,19 @@ class ReelStore implements IStore {
           })
           if (symbol.y >= reelHeight) {
             symbol.y -= reelHeight; // Move the symbol to the beginning
-            symbol.texture = this.textures.slice().sort(() => Math.random() - 0.5)[0] // get random texture
+            symbol.texture = this.getRandomTexture()
           }
           this.setFilter([])
           this.setSpinProgress(false)
+          resolve()
         }
-      });
-    });
+      })
+    })
+
+  }
+
+  getRandomTexture(): string {
+    return this.textures.slice().sort(() => Math.random() - 0.5)[0]
   }
 
   get reels() {
