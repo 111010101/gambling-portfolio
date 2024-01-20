@@ -51,7 +51,7 @@ class ReelStore implements IStore {
     setTimeout(() => {
       this.setSpinProgress(true)
       this.spinReel(reelIndex)
-    }, reelIndex * 20)
+    }, reelIndex * 50)
   }
 
   public async spinReels(): Promise<void> {
@@ -110,7 +110,7 @@ class ReelStore implements IStore {
       gsap.to(symbol, {
         y: "+=" + symbolHeight, // Shift down by one symbol height
         duration,
-        ease: "power2.inOut",
+        ease: 'power1.inOut',
         repeat: 10,
         onComplete: () => {
           const symbol = reel.symbols.reduce((previousValue, currentValue) => {
