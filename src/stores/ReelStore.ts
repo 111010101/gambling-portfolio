@@ -128,7 +128,7 @@ export class ReelStore implements IStore {
         y: "+=" + symbolHeight, // Shift down by one symbol height
         duration,
         ease: 'power1.inOut',
-        repeat: 10,
+        repeat: 5,
         onComplete: () => {
           const symbol = reel.symbols.reduce((previousValue, currentValue) => {
             if (previousValue.y < currentValue.y) {
