@@ -2,11 +2,11 @@ import { DeepReadonly } from 'ts-essentials';
 import { Types } from '../types/types';
 
 export const TEXTURES: Readonly<string[]> = [
-  'lemon.png',
-  'cherry.png',
-  'orange.png',
-  'plum.png',
-  'wild.png',
+  'five.png',
+  'fruit.png',
+  'fruit.png',
+  'ring.png',
+  'zero.png',
 ]
 
 export const COUNT_OF_REELS = 4
