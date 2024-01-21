@@ -43,7 +43,7 @@ export const SCENE_SIZE: Readonly<Types.Size> = {
 export const STAGE_SCALE: Types.PointCords = { x: 0.7, y: 0.7 }
 
 export const REELS_SCALE: Types.PointCords = { x: 0.67, y: 0.72 }
-export const REELS_CORDS: Types.PointCords = { x: 639, y: -80, }
+export const REELS_CORDS: Types.PointCords = { x: 639, y: -90, }
 export const REELS_BORDER: Types.PointCords = {
   x: 1920 / 2,
   y: 1080 / 2 - 40,

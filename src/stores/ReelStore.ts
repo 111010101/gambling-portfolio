@@ -75,9 +75,9 @@ export class ReelStore implements IStore {
     const reelHeight = 240 * 5; // Общая высота барабана
 
     await reel.symbols.reduce(async (p, symbol) => {
-      await this.symbolEase(symbol, 'up')
+      //await this.symbolEase(symbol, 'up')
       await this.spinSymbol(reel, symbol, symbolHeight, reelHeight, spinDuration)
-      await this.symbolEase(symbol, 'down')
+      //await this.symbolEase(symbol, 'down')
       return p
     }, Promise.resolve());
   }
