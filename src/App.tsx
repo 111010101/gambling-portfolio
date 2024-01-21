@@ -1,6 +1,6 @@
 import { Stage, Container, Sprite } from '@pixi/react';
 import { Reels } from './view/reels/Reels';
-import { ReelStore } from './stores/ReelStore';
+import { Graphics } from '@pixi/react';
 import { ColorMatrixFilter } from 'pixi.js';
 import {
   CENTER_ANCHOR,
@@ -17,18 +17,27 @@ import { myContainer } from './inversify.config';
 import { Types, StateTypes } from './types/types';
 import { IFsm } from './interfaces/interfaces';
 import { UIStore } from './stores/UIStore';
+import PIXI from 'pixi.js'
+import { useCallback } from 'react';
 
 const colorFilter = new ColorMatrixFilter()
 colorFilter.brightness(0.8, false)
-const App = observer(() => {
 
+const App = observer(() => {
   const { width, height } = SCENE_SIZE
   const uiStore = myContainer.get<UIStore>(Types.UIStore)
   const FSM = myContainer.get<IFsm>(Types.FSM)
-
+  const draw = useCallback((g: PIXI.Graphics) => {
+    g.clear();
+    g.beginFill(0x00000, 1);
+    g.drawRect(635, 740, 650, 50);
+    g.endFill()
+    return g
+  }, []);
   return (
     <Stage options={SCENE_OPTIONS} width={width} height={height}>
       <Container scale={STAGE_SCALE} anchor={CENTER_ANCHOR}>
+        <Graphics draw={draw} />
         <Reels
           scale={REELS_SCALE}
           reelsY={REELS_CORDS.y}

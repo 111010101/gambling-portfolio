@@ -75,9 +75,9 @@ export class ReelStore implements IStore {
     const reelHeight = 240 * 5; // Общая высота барабана
 
     await reel.symbols.reduce(async (p, symbol) => {
-      //await this.symbolEase(symbol, 'up')
+      await this.symbolEase(symbol, 'up')
       await this.spinSymbol(reel, symbol, symbolHeight, reelHeight, spinDuration)
-      //await this.symbolEase(symbol, 'down')
+      await this.symbolEase(symbol, 'down')
       return p
     }, Promise.resolve());
   }
@@ -86,6 +86,7 @@ export class ReelStore implements IStore {
     return new Promise(onComplete => {
       const y = direction === 'up' ? -20 : 20
       const ease = direction === 'up' ? 'back.in' : 'back.out'
+      const oldY = symbol.y
       gsap.to(symbol, {
         y: '+=' + y,
         duration: 0.4,
@@ -94,12 +95,23 @@ export class ReelStore implements IStore {
           if (direction === 'down') {
             gsap.to(symbol, {
               y: '+=' + -y,
-              duration: 0.4,
+              duration: 0.2,
               ease: 'back.in',
-              onComplete,
+              onComplete: () => {
+                symbol.y = oldY
+                onComplete()
+              }
             })
           } else {
-            onComplete()
+            gsap.to(symbol, {
+              y: '+=' + y,
+              duration: 0.2,
+              ease: 'back.in',
+              onComplete: () => {
+                symbol.y = oldY
+                onComplete()
+              }
+            })
           }
         },
       })
