@@ -1,10 +1,9 @@
 import { observer } from 'mobx-react-lite';
 import { JSX } from 'react';
 import { Container } from '@pixi/react';
-import { IReelData, ReelSymbolData } from '../../interfaces/interfaces';
+import { ReelSymbolData } from '../../interfaces/interfaces';
 import { Symbol } from './Symbol';
-import { reelStore } from '../../stores/ReelStore';
-import { BlurFilter, Filter } from 'pixi.js';
+import { BlurFilter } from 'pixi.js';
 interface IReelProps {
   x: number,
   reelData: ReelSymbolData[]

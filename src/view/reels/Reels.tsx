@@ -2,16 +2,20 @@ import { observer } from 'mobx-react-lite';
 import { JSX } from 'react';
 import { Container } from '@pixi/react';
 import { Reel } from './Reel';
-import { reelStore } from '../../stores/ReelStore';
+import { ReelStore } from '../../stores/ReelStore';
 import { Point } from 'pixi.js';
 import { getMask } from './ReelMask';
 import { REELS_MASK } from '../../constants/constants';
+import { myContainer } from '../../inversify.config';
+import { Types } from '../../types/types';
 
 interface IReelsProps {
   readonly reelsX: number
   readonly reelsY: number
   readonly scale: Pick<Point, "x" | "y">
 }
+
+const reelStore = myContainer.get<ReelStore>(Types.ReelStore)
 
 export const Reels = observer(({ reelsX, reelsY, scale }: IReelsProps): JSX.Element => {
   const [key1, key2, key3, key4] = reelStore.reels.map(({ index }) => (1 + index) * Math.random())

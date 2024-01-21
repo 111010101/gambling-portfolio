@@ -1,4 +1,15 @@
-import { State } from '../types/types';
+import { Types } from '../types/types';
+
+export interface IFsm {
+  readonly states: Types.State[]
+  readonly subscribers: StateData[]
+  readonly currentState: Types.State
+
+  dispatch(states: Types.State[]): Promise<void>
+
+  subscribe({ state, store }: StateData): void
+
+}
 
 export type ReelSymbolData = {
   x: number
@@ -14,7 +25,10 @@ export interface IReelData {
 }
 
 export interface IStore {
-  update: (state: State) => Promise<void>
+  update: (state: Types.State) => Promise<Types.State>
 }
 
-export type StateData = { callback: Function, state: State, store: IStore, nextState: State }
+export type StateData = {
+  state: Types.State,
+  store: IStore
+}

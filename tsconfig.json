@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "target": "es5",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
+    "types": ["reflect-metadata"],
     "useDefineForClassFields": true,
     "allowJs": true,
     "skipLibCheck": true,

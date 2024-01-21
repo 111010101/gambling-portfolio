@@ -1,39 +1,58 @@
-import { State } from '../types/types';
-import { StateData } from '../interfaces/interfaces';
+import { Types } from '../types/types';
+import { IFsm, StateData } from '../interfaces/interfaces';
+import { injectable } from 'inversify';
+let instance: FSM
+@injectable()
+export class FSM implements IFsm {
+  private _states: Types.State[] = []
+  private _subscribers: StateData[] = []
+  private _currentState: Types.State = 'IdleState'
+  private _previousState: Types.State = 'EmptyState'
 
-class FSMObserver {
+  constructor() {
+    if (instance) {
+      return instance
+    }
+    instance = this
+    return instance
+  }
 
-  private states: State[] = []
-  private subscribers: StateData[] = []
-  private currentState: State = 'IdleState'
-
-  public async dispatch(states: State[]): Promise<void> {
-    if (states.includes(this.currentState)) {
+  public async dispatch(states: Types.State[]): Promise<void> {
+    if (this._previousState === states[0]) {
       return;
     }
-    this.currentState = states[0]
+    this._previousState = this._currentState
+    this._currentState = states[0]
     return states.reduce((promise: Promise<void>, state) => {
       return promise.then(() => this.updateStateData(state))
     }, Promise.resolve())
   }
 
-  public unsubscribe(fn: Function) {
-    this.subscribers = this.subscribers.filter(({ callback }) => callback !== fn)
+  public subscribe({ state, store }: StateData): void {
+    this._states.push(state)
+    this._subscribers.push({ state, store })
   }
-
-  public subscribe(callback: Function, { state, store, nextState }: StateData) {
-    this.subscribers.push({ callback, state, store, nextState })
-  }
-  private updateStateData(newState: State) {
-    const stateData = this.subscribers.find(({ state }) => state === newState)
+  private updateStateData(newState: Types.State): Promise<void> {
+    const stateData: StateData | undefined = this._subscribers.find(({ state }) => state === newState)
     if (!stateData) {
       throw new Error(`The ${newState} doesn\'t exist in subscribers`)
     }
-    const { callback, store, state, nextState } = stateData
+    const { store, state } = stateData
     return store
-      .update(callback.bind(null, state))
-      .then(() => this.dispatch([nextState]))
+      .update(state)
+      .then((nextState) => this.dispatch([nextState]))
   }
-}
 
-export const FSM = new FSMObserver()
+  get states(): Types.State[] {
+    return this._states.slice()
+  }
+
+  get subscribers(): StateData[] {
+    return this._subscribers.slice().map(data => Object.assign({}, data))
+  }
+
+  get currentState() {
+    return this._currentState
+  }
+
+}

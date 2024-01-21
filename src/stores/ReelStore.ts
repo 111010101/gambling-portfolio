@@ -1,14 +1,19 @@
 import { IReelData, IStore, ReelSymbolData } from '../interfaces/interfaces';
 import { COUNT_OF_REELS, REEL_CORDS, TEXTURES } from '../constants/constants';
-import { observable, action } from 'mobx';
-import { makeAutoObservable } from 'mobx';
+import { observable, action, makeAutoObservable } from 'mobx';
 import { gsap } from "gsap";
-import { PointCords, State } from '../types/types';
+import { Types } from '../types/types';
 import { BlurFilter } from 'pixi.js';
+import { injectable } from 'inversify';
+import { FSM } from '../FSM/FSMObserber';
+import { UIStore } from './UIStore';
+import { myContainer } from '../inversify.config';
 
-class ReelStore implements IStore {
+let instance: ReelStore
+@injectable()
+export class ReelStore implements IStore {
   readonly filterStrength = 2
-  public countOfReels: number
+  public countOfReels: number = COUNT_OF_REELS
 
   @observable
   public isSpinProgress: boolean = false
@@ -16,63 +21,65 @@ class ReelStore implements IStore {
   public isIdle: boolean = true
 
   @observable
-  public _textures: string[]
+  public _textures: string[] = TEXTURES.slice()
   @observable
-  private readonly _reels: IReelData[]
+  private readonly _reels: IReelData[] = ReelStore.createReels(REEL_CORDS)
 
   @observable
-  private _filters: BlurFilter[] | null
+  private _filters: BlurFilter[] | null = null
   private _blurFilter: BlurFilter = new BlurFilter(this.filterStrength)
 
-  constructor(textures: string[], countOfReels: number, { x, y }: PointCords) {
+  constructor() {
+    if (instance) {
+      return instance
+    }
     makeAutoObservable(this, undefined, { deep: true })
-    this._filters = null
-    this._textures = textures
-    this.countOfReels = countOfReels
-    this._reels = [...new Array(countOfReels)].map((_, index) => {
-      return {
-        x: x * index,
-        symbols: this.getShuffledReelSymbols(textures, x * index, y),
-        index,
-        y: y * index,
-      }
-    })
+    instance = this
+    return instance
   }
 
-  public async update(state: State): Promise<void> {
+  public async update(state: Types.State): Promise<Types.State> {
     switch (state) {
       case 'SpinState':
-        return this.spinReels()
+        const uiStore = myContainer.get<UIStore>(Types.UIStore)
+        await uiStore.update('SpinState')
+        await this.spinReels()
+        await uiStore.update('IdleState')
     }
-    return Promise.resolve()
+    return Promise.resolve('IdleState')
   }
 
-  private async spin(reelIndex: number): Promise<void> {
-    setTimeout(() => {
-      this.setSpinProgress(true)
-      this.spinReel(reelIndex)
-    }, reelIndex * 50)
+  private spin(reelIndex: number): Promise<void> {
+    return new Promise(resolve => {
+      setTimeout( () => {
+        this.setSpinProgress(true)
+        this.spinReel(reelIndex).then(resolve)
+      }, reelIndex * 50)
+    })
+
   }
 
-  public async spinReels(): Promise<void> {
-    await this.reels.reduce((promise, _, reelIndex) => {
-      return promise
-        .then(() => this.spin(reelIndex))
-    }, Promise.resolve())
+  public async spinReels(): Promise<void[]> {
+    const promises: Promise<void>[] = []
+    this.reels.forEach((_, reelIndex) => {
+      promises.push(this.spin(reelIndex))
+    })
+    return Promise.all(promises)
   }
 
 
 
-  private spinReel(reelIndex: number, spinDuration: number = 0.2): void {
+  private async spinReel(reelIndex: number,  spinDuration: number = 0.2): Promise<void> {
     const reel = this._reels[reelIndex];
     const symbolHeight = 240; // Высота одного символа
     const reelHeight = 240 * 5; // Общая высота барабана
 
-    reel.symbols.forEach(async (symbol) => {
+    await reel.symbols.reduce(async (p, symbol) => {
       await this.symbolEase(symbol, 'up')
       await this.spinSymbol(reel, symbol, symbolHeight, reelHeight, spinDuration)
       await this.symbolEase(symbol, 'down')
-    });
+      return p
+    }, Promise.resolve());
   }
 
   symbolEase(symbol: ReelSymbolData, direction: 'up' | 'down'): Promise<void> {
@@ -143,8 +150,19 @@ class ReelStore implements IStore {
   get textures() {
     return this._textures.slice().sort(() => Math.random() - 0.5)
   }
+
+  private static createReels({ x, y }: Types.PointCords): IReelData[] {
+    return [...new Array(COUNT_OF_REELS)].map((_, index) => {
+      return {
+        x: x * index,
+        symbols: ReelStore.getShuffledReelSymbols(TEXTURES.slice(), x * index, y),
+        index,
+        y: y * index,
+      }
+    })
+  }
   @action
-  private getShuffledReelSymbols(textures: string[], x: number, y: number): ReelSymbolData[] {
+  private static getShuffledReelSymbols(textures: string[], x: number, y: number): ReelSymbolData[] {
     return textures.concat(textures[0]).slice()
       .sort(() => Math.random() - 0.5)
       .map((texture, i) => {
@@ -173,5 +191,3 @@ class ReelStore implements IStore {
   }
 
 }
-
-export const reelStore = new ReelStore(TEXTURES.slice(), COUNT_OF_REELS, REEL_CORDS)
