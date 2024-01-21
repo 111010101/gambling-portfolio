@@ -67,8 +67,6 @@ export class ReelStore implements IStore {
     return Promise.all(promises)
   }
 
-
-
   private async spinReel(reelIndex: number,  spinDuration: number = 0.2): Promise<void> {
     const reel = this._reels[reelIndex];
     const symbolHeight = 240; // Высота одного символа

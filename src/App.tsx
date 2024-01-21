@@ -19,6 +19,7 @@ import { IFsm } from './interfaces/interfaces';
 import { UIStore } from './stores/UIStore';
 import PIXI from 'pixi.js'
 import { useCallback } from 'react';
+import { borderGraphic } from './functions/Functions';
 
 const colorFilter = new ColorMatrixFilter()
 colorFilter.brightness(0.8, false)
@@ -27,13 +28,7 @@ const App = observer(() => {
   const { width, height } = SCENE_SIZE
   const uiStore = myContainer.get<UIStore>(Types.UIStore)
   const FSM = myContainer.get<IFsm>(Types.FSM)
-  const draw = useCallback((g: PIXI.Graphics) => {
-    g.clear();
-    g.beginFill(0x00000, 1);
-    g.drawRect(635, 740, 650, 50);
-    g.endFill()
-    return g
-  }, []);
+  const draw = useCallback(borderGraphic, []);
   return (
     <Stage options={SCENE_OPTIONS} width={width} height={height}>
       <Container scale={STAGE_SCALE} anchor={CENTER_ANCHOR}>

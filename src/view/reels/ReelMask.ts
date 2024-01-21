@@ -16,12 +16,3 @@ export const getGraphicTexture = (w: number, h: number, x: number, y: number, co
   graphics.endFill();
   return autoDetectRenderer().generateTexture(graphics)
 }
-
-export function graphicsExample() {
-  const g = new Graphics()
-  g.clear();
-  g.beginFill(0x00000, 1);
-  g.drawRect(0, 0, 1220, 1220);
-  g.endFill()
-  return g
-}

@@ -3,7 +3,7 @@ import { Types } from '../types/types';
 
 export const TEXTURES: Readonly<string[]> = [
   'five.png',
-  'fruit.png',
+  'grape.png',
   'fruit.png',
   'ring.png',
   'zero.png',
@@ -55,3 +55,4 @@ export const SPIN_BUTTON: Types.PointCords & Types.Size = {
   width: 256,
   height: 256,
 }
+
