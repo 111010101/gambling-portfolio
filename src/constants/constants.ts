@@ -1,12 +1,22 @@
 import { DeepReadonly } from 'ts-essentials';
 import { Types } from '../types/types';
+import TextureName = Types.TextureName;
+import { WinLineStore } from '../stores/WinLineStore';
 
-export const TEXTURES: Readonly<string[]> = [
+export const TEXTURES: Readonly<TextureName[]> = [
   'five.png',
   'grape.png',
   'fruit.png',
   'ring.png',
   'zero.png',
+]
+
+export const WIN_TEXTURES: Readonly<TextureName[]> = [
+  'five_transparent.png',
+  'grape_transparent.png',
+  'fruit_transparent.png',
+  'ring_transparent.png',
+  'zero_transparent.png',
 ]
 
 export const COUNT_OF_REELS = 4
@@ -44,6 +54,13 @@ export const STAGE_SCALE: Types.PointCords = { x: 0.7, y: 0.7 }
 
 export const REELS_SCALE: Types.PointCords = { x: 0.67, y: 0.72 }
 export const REELS_CORDS: Types.PointCords = { x: 639, y: -85, }
+export const  TRANSPARENT_SYMBOL_BIAS_LANDSCAPE: Types.PairWithCord[] = [
+  [120, 102, 'fruit_transparent'],
+  [120, 123, 'grape_transparent'],
+  [120, 104, 'zero_transparent'],
+  [120, 105, 'ring_transparent'],
+  [120, 106, 'grape_transparent'],
+]
 export const REELS_BORDER: Types.PointCords = {
   x: 1920 / 2,
   y: 1080 / 2 - 40,
@@ -56,3 +73,17 @@ export const SPIN_BUTTON: Types.PointCords & Types.Size = {
   height: 256,
 }
 
+export const STATES: DeepReadonly<Types.RegisteredData> = [
+  {
+    state: 'SpinState',
+    storeName: 'ReelStore'
+  },
+  {
+    state: 'IdleState',
+    storeName: 'UIStore'
+  },
+  {
+    state: 'WinLineState',
+    storeName: 'WinLineStore'
+  },
+]

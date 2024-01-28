@@ -1,4 +1,5 @@
 import { Types } from '../types/types';
+import TextureName = Types.TextureName;
 
 export interface IFsm {
   readonly states: Types.State[]
@@ -14,7 +15,7 @@ export interface IFsm {
 export type ReelSymbolData = {
   x: number
   y: number
-  texture: string
+  texture: TextureName
 }
 
 export interface IReelData {
@@ -31,4 +32,8 @@ export interface IStore {
 export type StateData = {
   state: Types.State,
   store: IStore
+}
+
+export interface INetwork {
+
 }

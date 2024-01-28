@@ -17,9 +17,8 @@ import { myContainer } from './inversify.config';
 import { Types, StateTypes } from './types/types';
 import { IFsm } from './interfaces/interfaces';
 import { UIStore } from './stores/UIStore';
-import PIXI from 'pixi.js'
 import { useCallback } from 'react';
-import { borderGraphic } from './functions/Functions';
+import { getBorderGraphic } from './functions/SideEffectsFunctions';
 
 const colorFilter = new ColorMatrixFilter()
 colorFilter.brightness(0.8, false)
@@ -28,7 +27,7 @@ const App = observer(() => {
   const { width, height } = SCENE_SIZE
   const uiStore = myContainer.get<UIStore>(Types.UIStore)
   const FSM = myContainer.get<IFsm>(Types.FSM)
-  const draw = useCallback(borderGraphic, []);
+  const draw = useCallback(getBorderGraphic, []);
   return (
     <Stage options={SCENE_OPTIONS} width={width} height={height}>
       <Container scale={STAGE_SCALE} anchor={CENTER_ANCHOR}>
