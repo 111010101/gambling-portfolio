@@ -8,6 +8,7 @@ import { injectable } from 'inversify';
 import { FSM } from '../FSM/FSMObserber';
 import { UIStore } from './UIStore';
 import { myContainer } from '../inversify.config';
+import TextureName = Types.TextureName;
 
 let instance: ReelStore
 @injectable()
@@ -21,7 +22,7 @@ export class ReelStore implements IStore {
   public isIdle: boolean = true
 
   @observable
-  public _textures: string[] = TEXTURES.slice()
+  public _textures: TextureName[] = TEXTURES.slice()
   @observable
   private readonly _reels: IReelData[] = ReelStore.createReels(REEL_CORDS)
 
@@ -30,12 +31,8 @@ export class ReelStore implements IStore {
   private _blurFilter: BlurFilter = new BlurFilter(this.filterStrength)
 
   constructor() {
-    if (instance) {
-      return instance
-    }
+    console.error(1)
     makeAutoObservable(this, undefined, { deep: true })
-    instance = this
-    return instance
   }
 
   public async update(state: Types.State): Promise<Types.State> {
@@ -149,16 +146,16 @@ export class ReelStore implements IStore {
 
   }
 
-  getRandomTexture(): string {
+  public get textures(): TextureName[] {
+    return this._textures.slice().sort(() => Math.random() - 0.5)
+  }
+
+  private getRandomTexture(): Readonly<TextureName> {
     return this.textures.slice().sort(() => Math.random() - 0.5)[0]
   }
 
   get reels() {
     return this._reels
-  }
-
-  get textures() {
-    return this._textures.slice().sort(() => Math.random() - 0.5)
   }
 
   private static createReels({ x, y }: Types.PointCords): IReelData[] {
@@ -172,7 +169,7 @@ export class ReelStore implements IStore {
     })
   }
   @action
-  private static getShuffledReelSymbols(textures: string[], x: number, y: number): ReelSymbolData[] {
+  private static getShuffledReelSymbols(textures: TextureName[], x: number, y: number): ReelSymbolData[] {
     return textures.concat(textures[0]).slice()
       .sort(() => Math.random() - 0.5)
       .map((texture, i) => {
