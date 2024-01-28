@@ -20,7 +20,7 @@ interface ISymbolProps {
 }
 
 
-export const Symbol = observer (({ y, texture, filters, transparentTexture, index }: ISymbolProps): JSX.Element | never  => {
+export const Symbol = observer (({ y, texture, filters, index }: ISymbolProps): JSX.Element | never  => {
   const reelStore = myContainer.get<ReelStore>(Types.ReelStore)
   const winLineStore = myContainer.get<WinLineStore>(Types.WinLineStore)
   const textureName = texture.split('.')[0]

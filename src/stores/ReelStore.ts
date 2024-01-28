@@ -31,7 +31,6 @@ export class ReelStore implements IStore {
   private _blurFilter: BlurFilter = new BlurFilter(this.filterStrength)
 
   constructor() {
-    console.error(1)
     makeAutoObservable(this, undefined, { deep: true })
   }
 
