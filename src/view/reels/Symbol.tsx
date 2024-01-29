@@ -8,8 +8,6 @@ import { ReelStore } from '../../stores/ReelStore';
 import { compareImageReducer } from '../../functions/PureFunctions';
 import { WinLineStore } from '../../stores/WinLineStore';
 import { observer } from 'mobx-react-lite';
-import PointCords = Types.PointCords;
-import PairWithCord = Types.PairWithCord;
 
 interface ISymbolProps {
   texture: Types.TextureName
@@ -29,10 +27,17 @@ export const Symbol = observer (({ y, texture, filters, index }: ISymbolProps): 
     .reduce(compareImageReducer, { texture: 'empty.png', textureName, })
 
   const { width, height } = SYMBOL_SIZE
-    const cords = TRANSPARENT_SYMBOL_BIAS_LANDSCAPE.flatMap(([x, y, symbolName]) => {
-      return [x, y]
-    });
-   const [biasX, biasY] = cords
+  let [biasX, biasY, name, _, scale] = TRANSPARENT_SYMBOL_BIAS_LANDSCAPE.reduce((data, [x, y, symbolName, scale,]) => {
+    const [foundedX, foundedY, name, isFound] = data
+    if (isFound) {
+      return data
+    }
+    const [textureName] = symbolName.split('.')
+    if (foundedTexture.includes(textureName)) {
+      return [x, y, symbolName, true, scale]
+    }
+    return [x, y, symbolName, false, scale]
+  }, [0, 0, 'false', false, 2])
 
   return (
     <Container>
@@ -42,6 +47,7 @@ export const Symbol = observer (({ y, texture, filters, index }: ISymbolProps): 
                zIndex={(index + 1) ** (index + 1)}
                width={width / 1.5}
                height={height / 1.51}
+               scale={scale}
                blendMode={winLineStore.blendMode} />
     </Container>
   )

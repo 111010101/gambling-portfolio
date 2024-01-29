@@ -7,7 +7,7 @@ export namespace Types {
   export type TextureName = `${string}${ImageType}`
   export type State = `${string}${'State'}`
   export type PointCords = Readonly<Pick<Point, "x" | "y">>
-  export type PairWithCord = [number, number, string]
+  export type PairWithCord = [number, number, string, number]
   export type Size = Readonly<{
     width: number
     height: number
