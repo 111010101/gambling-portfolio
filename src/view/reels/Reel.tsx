@@ -1,3 +1,5 @@
+import './Reel.module.css'
+
 import { observer } from 'mobx-react-lite';
 import React, { JSX } from 'react';
 import { Container } from '@pixi/react';

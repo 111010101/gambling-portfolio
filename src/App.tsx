@@ -1,3 +1,5 @@
+import './App.module.css'
+
 import { Stage, Container, Sprite } from '@pixi/react';
 import { Reels } from './view/reels/Reels';
 import { Graphics } from '@pixi/react';
@@ -30,7 +32,7 @@ const App = observer(() => {
   const draw = useCallback(getBorderGraphic, []);
   return (
     <Stage options={SCENE_OPTIONS} width={width} height={height}>
-      <Container scale={STAGE_SCALE} anchor={CENTER_ANCHOR}>
+      <Container  scale={STAGE_SCALE} anchor={CENTER_ANCHOR}>
         <Graphics draw={draw} />
         <Reels
           scale={REELS_SCALE}
@@ -40,9 +42,18 @@ const App = observer(() => {
         <Sprite
           filters={[colorFilter]}
           image="border.png"
+          width={1920}
+          height={1080}
+          scale={ { x: 1, y: 1.05} }
           x={REELS_BORDER.x}
           y={REELS_BORDER.y}
           anchor={CENTER_ANCHOR}
+        />
+        <Sprite
+          image="border_slot.png"
+          x={460}
+          y={20}
+          scale={{ x: 1.1, y: 1.15 }}
         />
       </Container>
 
@@ -56,6 +67,7 @@ const App = observer(() => {
         width={SPIN_BUTTON.width}
         height={SPIN_BUTTON.height}
         anchor={CENTER_ANCHOR}
+        rotation={Math.PI * 2}
       />
     </Stage>
   )
