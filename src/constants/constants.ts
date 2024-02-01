@@ -2,13 +2,26 @@ import { DeepReadonly } from 'ts-essentials';
 import { Types } from '../types/types';
 import TextureName = Types.TextureName;
 import { WinLineStore } from '../stores/WinLineStore';
-
 export const TEXTURES: Readonly<TextureName[]> = [
   'five.png',
   'grape.png',
   'fruit.png',
   'ring.png',
   'zero.png',
+]
+
+export const winCombinations: Types.WinCombination = {
+  'five':  { symbolId: 0, texture: 'five.png', },
+  'grape': { symbolId: 1, texture: 'grape.png', },
+  'fruit': { symbolId: 2, texture: 'fruit.png', },
+  'ring':  { symbolId: 3, texture: 'ring.png', },
+  'zero':  { symbolId: 4, texture: 'zero.png', },
+}
+
+const WIN_LINES = [
+  [0, 0, 0, 0],
+  [1, 1, 1, 1],
+
 ]
 
 export const WIN_TEXTURES: Readonly<TextureName[]> = [
@@ -67,7 +80,7 @@ export const REELS_BORDER: Types.PointCords = {
 }
 
 export const SPIN_BUTTON: Types.PointCords & Types.Size = {
-  x: 1920 / 2.77,
+  x: 1920 / 2.85,
   y: 750,
   width: 256,
   height: 256,
@@ -85,5 +98,9 @@ export const STATES: DeepReadonly<Types.RegisteredData> = [
   {
     state: 'WinLineState',
     storeName: 'WinLineStore'
+  },
+  {
+    state: 'NetworkState',
+    storeName: 'NetworkStore'
   },
 ]

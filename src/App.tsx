@@ -67,7 +67,6 @@ const App = observer(() => {
         width={SPIN_BUTTON.width}
         height={SPIN_BUTTON.height}
         anchor={CENTER_ANCHOR}
-        rotation={Math.PI * 2}
       />
     </Stage>
   )

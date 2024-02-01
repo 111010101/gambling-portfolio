@@ -9,14 +9,6 @@ export class FSM implements IFsm {
   private _currentState: Types.State = 'IdleState'
   private _previousState: Types.State = 'EmptyState'
 
-  constructor() {
-    if (instance) {
-      return instance
-    }
-    instance = this
-    return instance
-  }
-
   public async dispatch(states: Types.State[]): Promise<void> {
     if (this._previousState === states[0]) {
       return;

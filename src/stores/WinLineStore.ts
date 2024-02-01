@@ -15,13 +15,12 @@ export class WinLineStore implements IStore {
 
   constructor() {
     makeAutoObservable(this, undefined, { deep: true })
-    setTimeout(this.highlightSymbol.bind(this), 1000)
+      //setTimeout(this.highlightSymbol.bind(this), 1000)
   }
 
-  @action
   private highlightSymbol() {
     const onUpdate = throttle(() => {
-      this.blendMode = this.blendMode === BLEND_MODES.ADD ? BLEND_MODES.NONE : BLEND_MODES.ADD
+      this.changeBlendMode()
     }, 200)
     gsap.to({ t: 0 }, {
       y: '+=' + 10,
@@ -30,8 +29,13 @@ export class WinLineStore implements IStore {
       onComplete: () => {
         this.blendMode = BLEND_MODES.ADD
       },
-      repeat: 2
+      repeat: 6
     })
+  }
+
+  @action
+  changeBlendMode = () => {
+    this.blendMode = this.blendMode === BLEND_MODES.ADD ? BLEND_MODES.NONE : BLEND_MODES.ADD
   }
 
   public async update(state: Types.State): Promise<Types.State> {

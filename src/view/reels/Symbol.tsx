@@ -52,3 +52,4 @@ export const Symbol = observer (({ y, texture, filters, index }: ISymbolProps): 
     </Container>
   )
 })
+

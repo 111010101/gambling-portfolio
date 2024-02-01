@@ -45,7 +45,7 @@ export const registerStates = (data: Types.RegisteredData) => {
 export const getBorderGraphic = (g: Graphics) => {
   g.clear();
   g.beginFill(0x00000, 1);
-  g.drawRect(635, 740, 650, 50);
+  g.drawRect(635, 50, 660, 740);
   g.endFill()
   return g
 }

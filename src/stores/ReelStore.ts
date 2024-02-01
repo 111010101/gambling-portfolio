@@ -5,10 +5,10 @@ import { gsap } from "gsap";
 import { Types } from '../types/types';
 import { BlurFilter } from 'pixi.js';
 import { injectable } from 'inversify';
-import { FSM } from '../FSM/FSMObserber';
 import { UIStore } from './UIStore';
 import { myContainer } from '../inversify.config';
 import TextureName = Types.TextureName;
+import { getShuffledReelSymbols } from '../functions/PureFunctions';
 
 let instance: ReelStore
 @injectable()
@@ -22,13 +22,14 @@ export class ReelStore implements IStore {
   public isIdle: boolean = true
 
   @observable
-  public _textures: TextureName[] = TEXTURES.slice()
+  public readonly _textures: TextureName[] = TEXTURES.slice()
   @observable
   private readonly _reels: IReelData[] = ReelStore.createReels(REEL_CORDS)
 
   @observable
-  private _filters: BlurFilter[] | null = null
-  private _blurFilter: BlurFilter = new BlurFilter(this.filterStrength)
+  private _filters: BlurFilter[] = []
+  private _filter: BlurFilter[] | null = null
+  private _blurFilter = () => new BlurFilter(this.filterStrength)
 
   constructor() {
     makeAutoObservable(this, undefined, { deep: true })
@@ -42,7 +43,7 @@ export class ReelStore implements IStore {
         await this.spinReels()
         await uiStore.update('IdleState')
     }
-    return Promise.resolve('IdleState')
+    return Promise.resolve('NetworkState')
   }
 
   private spin(reelIndex: number): Promise<void> {
@@ -63,7 +64,7 @@ export class ReelStore implements IStore {
     return Promise.all(promises)
   }
 
-  private async spinReel(reelIndex: number,  spinDuration: number = 0.2): Promise<void> {
+  private async spinReel(reelIndex: number,  spinDuration: number = 0.1): Promise<void> {
     const reel = this._reels[reelIndex];
     const symbolHeight = 240; // Высота одного символа
     const reelHeight = 240 * 5; // Общая высота барабана
@@ -119,7 +120,6 @@ export class ReelStore implements IStore {
     duration: number,
   ): Promise<void> {
     return new Promise(resolve => {
-      this.setFilter([this._blurFilter])
       gsap.to(symbol, {
         y: "+=" + symbolHeight, // Shift down by one symbol height
         duration,
@@ -134,9 +134,9 @@ export class ReelStore implements IStore {
           })
           if (symbol.y >= reelHeight) {
             symbol.y -= reelHeight; // Move the symbol to the beginning
-            symbol.texture = this.getRandomTexture()
+            const [texture, index] = this.getRandomTexture()
+            symbol.texture = texture
           }
-          this.setFilter([])
           this.setSpinProgress(false)
           resolve()
         }
@@ -149,8 +149,21 @@ export class ReelStore implements IStore {
     return this._textures.slice().sort(() => Math.random() - 0.5)
   }
 
-  private getRandomTexture(): Readonly<TextureName> {
-    return this.textures.slice().sort(() => Math.random() - 0.5)[0]
+  private getRandomTexture(): Readonly<[TextureName, number]> | never {
+    const textures = this.textures.slice().sort(() => Math.random() - 0.5)
+    const texture = textures.shift()
+    const index: number = this.textures.reduce((index, _, i) => {
+      if (this._textures[i] === texture) {
+        index = i
+      }
+      return index
+    }, NaN)
+    if (isNaN(index)) {
+      throw new Error('symbol index can\'t be NaN')
+    } else if (texture === undefined) {
+      throw new Error('texture can\t be undefined')
+    }
+    return [texture, index]
   }
 
   get reels() {
@@ -158,24 +171,27 @@ export class ReelStore implements IStore {
   }
 
   private static createReels({ x, y }: Types.PointCords): IReelData[] {
-    return [...new Array(COUNT_OF_REELS)].map((_, index) => {
+    return [...new Array(COUNT_OF_REELS)].map((_, reelId) => {
       return {
-        x: x * index,
-        symbols: ReelStore.getShuffledReelSymbols(TEXTURES.slice(), x * index, y),
-        index,
-        y: y * index,
+        x: x * reelId,
+        symbols: getShuffledReelSymbols(TEXTURES.slice(), x * reelId, y, reelId),
+        index: reelId,
+        y: y * reelId,
       }
     })
   }
   @action
-  private static getShuffledReelSymbols(textures: TextureName[], x: number, y: number): ReelSymbolData[] {
+  private static getShuffledReelSymbols(textures: TextureName[], x: number, y: number, reelId: number): ReelSymbolData[] {
     return textures.concat(textures[0]).slice()
       .sort(() => Math.random() - 0.5)
-      .map((texture, i) => {
+      .map((texture, symbolId) => {
         return {
+          reelId,
+          symbolId,
           x: x,
-          y: y * i,
+          y: y * symbolId,
           texture,
+          filter: null,
         }
       })
   }
@@ -185,9 +201,9 @@ export class ReelStore implements IStore {
     return this._filters
   }
 
-  @action
-  setFilter = (filter: BlurFilter[] | null) => {
-    this._filters = filter
+  @observable
+  get filter() {
+    return this._filter
   }
 
   @action
