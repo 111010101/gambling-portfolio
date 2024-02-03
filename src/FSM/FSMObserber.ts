@@ -1,7 +1,7 @@
 import { Types } from '../types/types';
 import { IFsm, StateData } from '../interfaces/interfaces';
 import { injectable } from 'inversify';
-let instance: FSM
+
 @injectable()
 export class FSM implements IFsm {
   private _states: Types.State[] = []
@@ -45,6 +45,10 @@ export class FSM implements IFsm {
 
   get currentState() {
     return this._currentState
+  }
+
+  get previousState() {
+    return this._previousState
   }
 
 }

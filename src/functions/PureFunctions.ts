@@ -1,6 +1,7 @@
 import { Types } from '../types/types';
-import { ReelSymbolData } from '../interfaces/interfaces';
 import TextureName = Types.TextureName;
+
+type ReelSymbolData = Types.ReelSymbolData
 export function compareImageReducer(acc: Types.FoundedTransparentTexture, nextTexture: Types.TextureName | string): Types.FoundedTransparentTexture {
   const { texture, textureName } = acc
   if (texture === textureName) {

@@ -24,12 +24,14 @@ import { getBorderGraphic } from './functions/SideEffectsFunctions';
 
 const colorFilter = new ColorMatrixFilter()
 colorFilter.brightness(0.8, false)
+const uiStore = myContainer.get<UIStore>(Types.UIStore)
+const FSM = myContainer.get<IFsm>(Types.FSM)
+const toSpin = () => FSM.dispatch([StateTypes.SPIN])
 
 const App = observer(() => {
   const { width, height } = SCENE_SIZE
-  const uiStore = myContainer.get<UIStore>(Types.UIStore)
-  const FSM = myContainer.get<IFsm>(Types.FSM)
   const draw = useCallback(getBorderGraphic, []);
+  uiStore.updateRotation()
   return (
     <Stage options={SCENE_OPTIONS} width={width} height={height}>
       <Container  scale={STAGE_SCALE} anchor={CENTER_ANCHOR}>
@@ -60,13 +62,15 @@ const App = observer(() => {
       <Sprite
         interactive={uiStore.isIdle}
         cursor={'pointer'}
-        onclick={() => FSM.dispatch([StateTypes.SPIN])}
+        ontap={toSpin}
+        onclick={toSpin}
         image="spin.png"
         x={SPIN_BUTTON.x}
         y={SPIN_BUTTON.y}
         width={SPIN_BUTTON.width}
         height={SPIN_BUTTON.height}
         anchor={CENTER_ANCHOR}
+        rotation={uiStore.rotation}
       />
     </Stage>
   )

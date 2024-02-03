@@ -18,19 +18,18 @@ export const winCombinations: Types.WinCombination = {
   'zero':  { symbolId: 4, texture: 'zero.png', },
 }
 
-const WIN_LINES = [
-  [0, 0, 0, 0],
-  [1, 1, 1, 1],
+// const WIN_LINES = [
+//   [0, 0, 0, 0],
+//   [1, 1, 1, 1],
+// ]
 
-]
-
-export const WIN_TEXTURES: Readonly<TextureName[]> = [
-  'five_transparent.png',
-  'grape_transparent.png',
-  'fruit_transparent.png',
-  'ring_transparent.png',
-  'zero_transparent.png',
-]
+// export const WIN_TEXTURES: Readonly<TextureName[]> = [
+//   'five_transparent.png',
+//   'grape_transparent.png',
+//   'fruit_transparent.png',
+//   'ring_transparent.png',
+//   'zero_transparent.png',
+// ]
 
 export const COUNT_OF_REELS = 4
 
@@ -67,8 +66,8 @@ export const STAGE_SCALE: Types.PointCords = { x: 0.7, y: 0.7 }
 
 export const REELS_SCALE: Types.PointCords = { x: 0.67, y: 0.72 }
 export const REELS_CORDS: Types.PointCords = { x: 639, y: -85, }
-export const  TRANSPARENT_SYMBOL_BIAS_LANDSCAPE: Types.PairWithCord[] = [
-  [120, 102 + 20, 'fruit_transparent.png', 1.6],
+export const TRANSPARENT_SYMBOL_BIAS_LANDSCAPE: Types.PairWithCord[] = [
+  [120, 102 + 12, 'fruit_transparent.png', 1.6],
   [120 + 0.9, 103 + -2.5, 'grape_transparent.png', 1.6],
   [120, 104 + 20, 'zero_transparent.png', 1.6],
   [120 + -5, 105 + 10, 'ring_transparent.png', 1.6],

@@ -1,6 +1,4 @@
 import { Types } from '../types/types';
-import TextureName = Types.TextureName;
-import { Filter, BlurFilter } from 'pixi.js';
 
 export interface IFsm {
   readonly states: Types.State[]
@@ -13,18 +11,11 @@ export interface IFsm {
 
 }
 
-export type ReelSymbolData = {
-  x: number
-  y: number
-  texture: TextureName
-  filter: BlurFilter[] | null
-}
-
 export interface IReelData {
   x: number
   y: number
   index: number
-  symbols: ReelSymbolData[]
+  symbols: Types.ReelSymbolData[]
 }
 
 export interface IStore {
