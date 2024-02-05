@@ -17,10 +17,11 @@ import {
 import { observer } from 'mobx-react-lite';
 import { myContainer } from './inversify.config';
 import { Types, StateTypes } from './types/types';
-import { IFsm } from './interfaces/interfaces';
+import { IApp, IFsm } from './interfaces/interfaces';
 import { UIStore } from './stores/UIStore';
 import { useCallback } from 'react';
 import { getBorderGraphic } from './functions/SideEffectsFunctions';
+import { throttle } from './functions/SideEffectsFunctions';
 
 const colorFilter = new ColorMatrixFilter()
 colorFilter.brightness(0.8, false)
@@ -28,7 +29,7 @@ const uiStore = myContainer.get<UIStore>(Types.UIStore)
 const FSM = myContainer.get<IFsm>(Types.FSM)
 const toSpin = () => FSM.dispatch([StateTypes.SPIN])
 
-const App = observer(() => {
+const App = observer(({ textures }: IApp) => {
   const { width, height } = SCENE_SIZE
   const draw = useCallback(getBorderGraphic, []);
   uiStore.updateRotation()
@@ -37,6 +38,7 @@ const App = observer(() => {
       <Container  scale={STAGE_SCALE} anchor={CENTER_ANCHOR}>
         <Graphics draw={draw} />
         <Reels
+          resources={textures}
           scale={REELS_SCALE}
           reelsY={REELS_CORDS.y}
           reelsX={REELS_CORDS.x}
@@ -61,7 +63,7 @@ const App = observer(() => {
 
       <Sprite
         interactive={uiStore.isIdle}
-        cursor={'pointer'}
+        cursor={'grab'}
         ontap={toSpin}
         onclick={toSpin}
         image="spin.png"

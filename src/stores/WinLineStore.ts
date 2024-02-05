@@ -1,12 +1,16 @@
 import { IStore } from '../interfaces/interfaces';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 import { gsap } from 'gsap';
 import { StateTypes, Types } from '../types/types';
 import { action, makeAutoObservable, observable } from 'mobx';
-import { BLEND_MODES } from 'pixi.js';
-import { throttle } from '../functions/SideEffectsFunctions';
+import { BLEND_MODES, Texture } from 'pixi.js';
 import { TRANSPARENT_SYMBOL_BIAS_LANDSCAPE } from '../constants/constants';
 import { ColorMatrixFilter } from 'pixi.js';
+import { load } from '../core/utils/Loader';
+import { UIStore } from './UIStore';
+import { myContainer } from '../inversify.config';
+
+
 
 @injectable()
 export class WinLineStore implements IStore {
@@ -22,6 +26,8 @@ export class WinLineStore implements IStore {
 
   @observable
   private count: number = 0
+
+  private _numbers: Texture[] = []
 
   constructor() {
     makeAutoObservable(this, undefined, { deep: true })
@@ -55,18 +61,16 @@ export class WinLineStore implements IStore {
   }
 
   private highlightSymbol(resolve: Function) {
-    const onUpdate = throttle(() => {
-      this.incrementCount()
-    }, 20)
+    const onUpdate = this.incrementCount.bind(this)
     gsap.to({ t: 0 }, {
-      duration: 1.1,
+      duration: 1,
       onUpdate,
       onComplete: () => {
         this.count = 0
         this.filter = null
         resolve()
       },
-      repeat: 2
+      repeat: 1
     })
   }
 
@@ -83,13 +87,31 @@ export class WinLineStore implements IStore {
   }
 
   public async update(state: Types.State): Promise<Types.State> {
+    const uiStore = myContainer.get<UIStore>(Types.UIStore)
     switch (state) {
       case StateTypes.WIN_LINE:
+        await uiStore.update('WinLineState')
         await this.win()
+        await uiStore.update('IdleState')
         break;
     }
 
     return Promise.resolve(StateTypes.IDLE)
+  }
+
+  setNumberTextures(assets: Texture[]): void | never {``
+    if (assets.length === 0) {
+      throw new Error(`There is no any asset in array ${assets}`)
+    }
+    this._numbers = assets
+  }
+
+  get numbers(): Texture[] {
+    return this._numbers.slice()
+  }
+
+  get comma() {
+    return this._numbers[this.numbers.length - 1]
   }
 
 }

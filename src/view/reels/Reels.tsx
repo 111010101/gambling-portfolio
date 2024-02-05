@@ -3,21 +3,23 @@ import { JSX } from 'react';
 import { Container } from '@pixi/react';
 import { Reel } from './Reel';
 import { ReelStore } from '../../stores/ReelStore';
-import { Point } from 'pixi.js';
+import { Point, Texture } from 'pixi.js';
 import { getMask } from './ReelMask';
 import { REELS_MASK } from '../../constants/constants';
 import { myContainer } from '../../inversify.config';
 import { Types } from '../../types/types';
+import { WinLineStore } from '../../stores/WinLineStore';
 
 interface IReelsProps {
   readonly reelsX: number
   readonly reelsY: number
   readonly scale: Pick<Point, "x" | "y">
+  readonly resources: Texture[]
 }
 
 const reelStore = myContainer.get<ReelStore>(Types.ReelStore)
 
-export const Reels = observer(({ reelsX, reelsY, scale }: IReelsProps): JSX.Element => {
+export const Reels = observer(({ reelsX, reelsY, scale, resources }: IReelsProps): JSX.Element => {
   const [key1, key2, key3, key4] = reelStore.reels.map(({ index }) => (1 + index) * Math.random())
   const [reelData1, reelData2, reelData3, reelData4] = reelStore.reels
   const [index1, index2, index3, index4] = reelStore.reels.map((_, index) => index)

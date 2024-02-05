@@ -1,4 +1,5 @@
 import { Types } from '../types/types';
+import { Texture } from 'pixi.js';
 
 export interface IFsm {
   readonly states: Types.State[]
@@ -29,4 +30,8 @@ export type StateData = {
 
 export interface INetwork {
 
+}
+
+export interface IApp {
+  textures: Texture[]
 }

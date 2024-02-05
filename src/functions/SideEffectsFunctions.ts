@@ -4,6 +4,14 @@ import { StateTypes, Types } from '../types/types';
 import { IStore } from '../interfaces/interfaces';
 import { Graphics } from 'pixi.js';
 
+export function debounce(func: Function, ms: number) {
+  let timeout: number;
+  return function() {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(null), ms);
+  };
+}
+
 export function throttle(func: Function, ms: number) {
 
   let isThrottled = false,

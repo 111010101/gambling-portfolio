@@ -22,6 +22,7 @@ export class UIStore implements IStore {
   public async update(state: Types.State): Promise<Types.State> {
     switch (state) {
       case 'SpinState':
+      case 'WinLineState':
         this.isSpinProgress = true;
         this.isIdle = false;
         break;
@@ -30,6 +31,7 @@ export class UIStore implements IStore {
         this.isIdle = true;
         break;
     }
+
     return 'IdleState'
   }
 

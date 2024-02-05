@@ -22,7 +22,6 @@ const winLineStore = myContainer.get<WinLineStore>(Types.WinLineStore)
 
 const id = setTimeout(() => {
   winLineStore.updateTransparentSymbol()
-  console.error('UPDATE')
   clearTimeout(id)
 }, 200)
 

@@ -10,7 +10,8 @@ export class FSM implements IFsm {
   private _previousState: Types.State = 'EmptyState'
 
   public async dispatch(states: Types.State[]): Promise<void> {
-    if (this._previousState === states[0]) {
+    if (this._previousState === states[0] || this._previousState === 'EmptyState') {
+      this._previousState = 'IdleState'
       return;
     }
     this._previousState = this._currentState
@@ -29,6 +30,7 @@ export class FSM implements IFsm {
     if (!stateData) {
       throw new Error(`The ${newState} doesn\'t exist in subscribers`)
     }
+
     const { store, state } = stateData
     return store
       .update(state)
@@ -45,10 +47,6 @@ export class FSM implements IFsm {
 
   get currentState() {
     return this._currentState
-  }
-
-  get previousState() {
-    return this._previousState
   }
 
 }
