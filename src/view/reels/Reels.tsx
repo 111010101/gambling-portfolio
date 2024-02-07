@@ -8,7 +8,6 @@ import { getMask } from './ReelMask';
 import { REELS_MASK } from '../../constants/constants';
 import { myContainer } from '../../inversify.config';
 import { Types } from '../../types/types';
-import { WinLineStore } from '../../stores/WinLineStore';
 
 interface IReelsProps {
   readonly reelsX: number

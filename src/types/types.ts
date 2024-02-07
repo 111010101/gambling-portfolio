@@ -30,12 +30,14 @@ export namespace Types {
     filter: BlurFilter[] | null
   }
   export type Symbols = { [key: number]: TextureName }
+  export type GameButtonState = `is${string}ButtonActive`
   export const FSM = Symbol.for('FSM')
   export const NetWorkStore = Symbol.for('NetworkStore')
   export const ReelStore = Symbol.for('ReelStore')
   export const UIStore = Symbol.for('UIStore')
   export const WinLineStore = Symbol.for('WinLineStore')
   export const IStore = Symbol.for('IStore')
+  export const ClockStore = Symbol.for('ClockStore')
 }
 
 export namespace StateTypes {

@@ -1,7 +1,9 @@
 import { IStore } from '../interfaces/interfaces';
 import { injectable } from 'inversify';
+import { action, makeAutoObservable, observable } from 'mobx';
 import { Types } from '../types/types';
-import { action, observable } from 'mobx';
+
+type State = Types.State
 
 @injectable()
 export class UIStore implements IStore {
@@ -9,30 +11,34 @@ export class UIStore implements IStore {
   @observable
   public isSpinProgress: boolean = false
   @observable
-  public isIdle: boolean = true
+  public spinButtonActive: boolean = true
 
   @observable
   public rotation: number
 
   constructor() {
+    makeAutoObservable(this, undefined, { deep: true })
     this.rotation = Math.PI * 2
     window.addEventListener('resize', this.updateRotation.bind(this))
   }
 
-  public async update(state: Types.State): Promise<Types.State> {
+  @action
+  public async update(state: State): Promise<State> {
+    let currentState: State = 'EmptyState'
     switch (state) {
-      case 'SpinState':
-      case 'WinLineState':
-        this.isSpinProgress = true;
-        this.isIdle = false;
-        break;
       case 'IdleState':
-        this.isSpinProgress = false;
-        this.isIdle = true;
+        this.spinButtonActive = true;
+        currentState = 'IdleState' as State
         break;
+      case 'WinLineState':
+      case 'SpinState':
+      case 'NetworkState':
+      case 'EmptyState':
+        this.spinButtonActive = false;
+       break
     }
 
-    return 'IdleState'
+    return state
   }
 
   @action

@@ -10,8 +10,6 @@ import { load } from '../core/utils/Loader';
 import { UIStore } from './UIStore';
 import { myContainer } from '../inversify.config';
 
-
-
 @injectable()
 export class WinLineStore implements IStore {
 
@@ -99,7 +97,7 @@ export class WinLineStore implements IStore {
     return Promise.resolve(StateTypes.IDLE)
   }
 
-  setNumberTextures(assets: Texture[]): void | never {``
+  setNumberTextures(assets: Texture[]): void | never {
     if (assets.length === 0) {
       throw new Error(`There is no any asset in array ${assets}`)
     }
