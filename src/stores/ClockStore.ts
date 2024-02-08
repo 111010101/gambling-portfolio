@@ -41,6 +41,10 @@ export class ClockStore implements IStore {
     this.textures = textures
   }
 
+  get dot() {
+    return this.textures.slice().pop()
+  }
+
   @action
   updateTime() {
     const hours = new Date().getHours().toLocaleString().padStart(2, '0')

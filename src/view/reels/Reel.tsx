@@ -21,13 +21,10 @@ export const Reel = observer((props: IReelProps): JSX.Element => {
 
   return (
     <Container x={x} >
-      { Object.entries(netWorkStore.symbols).map(([index, texture]) => {
+      { Object.entries(netWorkStore.symbols).sort().map(([index, texture]) => {
         const data = reelSymbolData[Number(index)]
         return <Symbol texture={texture} y={data.y} filters={null} index={Number(index)} key={Math.random()} />
       })}
-      {/*{reelData.map((data: ReelSymbolData, index: number): JSX.Element => {*/}
-      {/*  return <Symbol texture={data.texture}  index={index}  filters={data.filter} y={data.y} key={Math.random()} />*/}
-      {/*})}*/}
     </Container>
   )
 })

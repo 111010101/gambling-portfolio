@@ -44,15 +44,17 @@ export const Symbol = observer (({ y, texture, filters, index }: ISymbolProps): 
     }
     return data
   })
-
+  if (foundedTexture.includes('fruit')) {
+    console.error(scale)
+  }
   return (
     <Container>
       <Sprite y={y}  image={texture} width={width} height={height}  filters={filters} />
       <Sprite y={y + biasY} image={foundedTexture} x={biasX}
                anchor={CENTER_ANCHOR}
                zIndex={(index + 1) ** (index + 1)}
-               width={width / 1.5}
-               height={height / 1.51}
+               // width={width / 1.5}
+               // height={height / 1.51}
                scale={ { x: scale, y: scale } }
                filters={index === 1 ? winLineStore.filter : null}/>
     </Container>

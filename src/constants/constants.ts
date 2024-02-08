@@ -90,10 +90,10 @@ export const SPIN_BUTTON: Types.PointCords & Types.Size = {
 
 export const ClockData = {
   anchor: CENTER_ANCHOR,
-  scale: 0.3,
+  scale: 0.31,
   width: 600,
   x: 240,
-  y: 280,
+  y: 230,
 }
 
 export const STATES: DeepReadonly<Types.RegisteredData> = [
