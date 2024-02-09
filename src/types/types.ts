@@ -29,7 +29,7 @@ export namespace Types {
     texture: TextureName
     filter: BlurFilter[] | null
   }
-  export type Symbols = { [key: number]: TextureName }
+  export type Symbols = TextureName[]
   export type GameButtonState = `is${string}ButtonActive`
   export const FSM = Symbol.for('FSM')
   export const NetWorkStore = Symbol.for('NetworkStore')

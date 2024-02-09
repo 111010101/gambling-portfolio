@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import { JSX } from 'react';
-import { ColorMatrixFilter, filters, Texture } from 'pixi.js';
-import { Sprite, Container } from '@pixi/react';
+import { ColorMatrixFilter, Texture } from 'pixi.js';
+import { Sprite } from '@pixi/react';
 import { ClockData } from '../../constants/constants';
 import { ClockStore } from '../../stores/ClockStore';
 import { myContainer } from '../../inversify.config';
@@ -9,7 +9,6 @@ import { Types } from '../../types/types';
 import { throttle } from '../../functions/SideEffectsFunctions';
 import { useTick } from '@pixi/react';
 import { Digit, Hours, Minutes, Seconds } from './NumberComponents';
-import { ClockBackground } from './ClockBackground';
 
 interface INumber {
   textures: Texture[]
@@ -34,9 +33,9 @@ export const Clock = observer(({ textures }: INumber): JSX.Element => {
   return (
     <Sprite anchor={anchor} scale={scale}  x={x} y={y} texture={Texture.from('clock_border.png')}>
       <Hours scale={0.76} y={-120} x={-500} filters={[colorFilter]} />
-      <Digit scale={0.76} y={-180} x={-320} texture={dot}/>
+      <Digit scale={0.76} y={-180} x={-300} texture={dot}/>
       <Minutes  scale={0.76} y={-120} x={-180} filters={[colorFilter]} />
-      <Digit scale={0.76} y={-180}  x={40} texture={dot} />
+      <Digit scale={0.76} y={-180}  x={20} texture={dot} />
       <Seconds scale={0.76} y={-120} x={160} filters={[colorFilter]}/>
     </Sprite>
   )

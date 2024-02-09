@@ -1,14 +1,17 @@
 import { IStore } from '../interfaces/interfaces';
-import { injectable, inject } from 'inversify';
+import { injectable } from 'inversify';
 import { gsap } from 'gsap';
 import { StateTypes, Types } from '../types/types';
-import { action, makeAutoObservable, observable } from 'mobx';
+import { action, get, makeAutoObservable, observable } from 'mobx';
 import { BLEND_MODES, Texture } from 'pixi.js';
 import { TRANSPARENT_SYMBOL_BIAS_LANDSCAPE } from '../constants/constants';
 import { ColorMatrixFilter } from 'pixi.js';
-import { load } from '../core/utils/Loader';
 import { UIStore } from './UIStore';
 import { myContainer } from '../inversify.config';
+import { NetworkStore } from './NetworkStore';
+import { mapWinSymbols } from '../functions/PureFunctions';
+
+type Symbols = Types.Symbols
 
 @injectable()
 export class WinLineStore implements IStore {
@@ -19,22 +22,64 @@ export class WinLineStore implements IStore {
   @observable
   public filter: ColorMatrixFilter[] | null = null
 
-  @observable
-  public winSymbolsView : Types.PairWithCord[]
+  winSymbolsView: Symbols
+  public symbolData: [number, number, string, number][]
 
   @observable
   private count: number = 0
 
   private _numbers: Texture[] = []
 
+  public newSymbols: Symbols[] = [
+    [
+      'five.png',
+      'grape.png',
+      'fruit.png',
+      'ring.png',
+      'zero.png',
+    ],
+    [
+      'ring.png',
+      'grape.png',
+      'zero.png',
+      'five.png',
+      'fruit.png',
+    ],
+    [
+      'ring.png',
+      'fruit.png',
+      'grape.png',
+      'five.png',
+      'zero.png',
+    ],
+    [
+      'five.png',
+      'grape.png',
+      'fruit.png',
+      'ring.png',
+      'zero.png',
+    ],
+    [
+      'zero.png',
+      'ring.png',
+      'fruit.png',
+      'grape.png',
+      'five.png',
+    ],
+  ]
+
   constructor() {
     makeAutoObservable(this, undefined, { deep: true })
     this.filter = [new ColorMatrixFilter()]
-    this.winSymbolsView = TRANSPARENT_SYMBOL_BIAS_LANDSCAPE.map(([x, y, name, scale]) => {
-      return [
-        x, y, name, scale
-      ]
+    this.winSymbolsView = this.newSymbols[Math.floor(Math.random()*this.newSymbols.length)];
+    this.symbolData = TRANSPARENT_SYMBOL_BIAS_LANDSCAPE.slice().sort().map(([x, y, symbolName, scale]) => {
+      return [x, y, symbolName, scale]
     })
+
+  }
+  @action
+  getSymbols() {
+    this.winSymbolsView = this.newSymbols[Math.floor(Math.random()*this.newSymbols.length)];
   }
 
   @action
@@ -55,7 +100,9 @@ export class WinLineStore implements IStore {
 
   @action
   public updateTransparentSymbol() {
-    this.winSymbolsView = this.winSymbolsView.slice().map(data => data)
+    const index = [1, 2, 3,].sort().pop()
+    const symbols = this.newSymbols[index ? index : 0]
+    this.winSymbolsView = this.newSymbols[Math.floor(Math.random()*this.newSymbols.length)];
   }
 
   private highlightSymbol(resolve: Function) {
@@ -89,6 +136,7 @@ export class WinLineStore implements IStore {
     switch (state) {
       case StateTypes.WIN_LINE:
         await uiStore.update('WinLineState')
+        console.error('win')
         await this.win()
         await uiStore.update('IdleState')
         break;

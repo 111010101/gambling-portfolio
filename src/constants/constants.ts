@@ -1,7 +1,7 @@
 import { DeepReadonly } from 'ts-essentials';
 import { Types } from '../types/types';
 import TextureName = Types.TextureName;
-import { WinLineStore } from '../stores/WinLineStore';
+
 export const TEXTURES: Readonly<TextureName[]> = [
   'five.png',
   'grape.png',
@@ -17,19 +17,6 @@ export const winCombinations: Types.WinCombination = {
   'ring':  { symbolId: 3, texture: 'ring.png', },
   'zero':  { symbolId: 4, texture: 'zero.png', },
 }
-
-// const WIN_LINES = [
-//   [0, 0, 0, 0],
-//   [1, 1, 1, 1],
-// ]
-
-// export const WIN_TEXTURES: Readonly<TextureName[]> = [
-//   'five_transparent.png',
-//   'grape_transparent.png',
-//   'fruit_transparent.png',
-//   'ring_transparent.png',
-//   'zero_transparent.png',
-// ]
 
 export const COUNT_OF_REELS = 4
 

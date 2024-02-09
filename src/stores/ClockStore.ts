@@ -68,7 +68,7 @@ export class ClockStore implements IStore {
 
 
   @action
-  private getNewTime(timeType: TimeMethod): [number, number] {
+  public getNewTime(timeType: TimeMethod): [number, number] {
     const date = new Date()[timeType]().toLocaleString().padStart(2, '0')
     const [firsDigit, secondDigit] = this.separateTime(date)
     return [firsDigit, secondDigit]

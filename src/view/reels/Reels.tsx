@@ -8,6 +8,7 @@ import { getMask } from './ReelMask';
 import { REELS_MASK } from '../../constants/constants';
 import { myContainer } from '../../inversify.config';
 import { Types } from '../../types/types';
+import { WinLineStore } from '../../stores/WinLineStore';
 
 interface IReelsProps {
   readonly reelsX: number
@@ -17,6 +18,7 @@ interface IReelsProps {
 }
 
 const reelStore = myContainer.get<ReelStore>(Types.ReelStore)
+const winLineStore = myContainer.get<WinLineStore>(Types.WinLineStore)
 
 export const Reels = observer(({ reelsX, reelsY, scale, resources }: IReelsProps): JSX.Element => {
   const [key1, key2, key3, key4] = reelStore.reels.map(({ index }) => (1 + index) * Math.random())

@@ -28,28 +28,43 @@ export const Digit = ({ y, x, texture, scale }: DigitsProps) => {
 }
 
 export const Hours = observer(({ y, scale, x, filters }: DigitsProps) => {
+  const [a, b] = store.getNewTime('getHours')
   return (
     <Container scale={scale} x={x} y={y}>
-      <Sprite x={0}  texture={store.hourDigitOne} filters={filters}/>
-      <Sprite x={150} y={-5} texture={store.hourDigitTwo}/>
+      <Sprite scale={reduceSix(a)} x={-15}  texture={store.hourDigitOne} filters={filters}/>
+      <Sprite scale={reduceSix(b)} x={170} y={5} texture={store.hourDigitTwo}/>
     </Container>
   )
 })
 
 export const Minutes = observer(({ x, y, filters, scale }: DigitsProps) => {
+  const [a, b] = store.getNewTime('getMinutes')
   return (
     <Container x={x} y={y} scale={scale}>
-      <Sprite x={0}  texture={store.minuteDigitOne} filters={filters}/>
-      <Sprite x={180} y={-5} texture={store.minuteDigitTwo} filters={filters}/>
+      <Sprite scale={reduceSix(a)} x={-10}  texture={store.minuteDigitOne} filters={filters}/>
+      <Sprite scale={reduceSix(b)} x={170} y={10} texture={store.minuteDigitTwo} filters={filters}/>
     </Container>
   )
 })
 
 export const Seconds = observer(({ x, y, filters, scale }: DigitsProps) => {
+  const [a, b] = store.getNewTime('getSeconds')
   return (
     <Container x={x} y={y} scale={scale}>
-      <Sprite x={0}  texture={store.secondDigitOne} filters={filters}/>
-      <Sprite x={180} y={-5} texture={store.secondDigitTwo} filters={filters}/>
+      <Sprite scale={reduceSix(a)} x={0}  y={-5} texture={store.secondDigitOne} filters={filters}/>
+      <Sprite scale={reduceSix(b)} x={180} y={-5} texture={store.secondDigitTwo} filters={filters}/>
     </Container>
   )
 })
+
+const reduceSix = (n: number): number => {
+  let scale: number = 1
+  if (n === 6 || n === 7) {
+    scale = scale * 0.95
+  } else if (n === 0) {
+    scale = scale * 1.05
+  } else if (n === 3) {
+    scale = scale * 1.1
+  }
+  return scale
+}

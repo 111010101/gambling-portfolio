@@ -10,11 +10,11 @@ import { NetworkStore } from './stores/NetworkStore';
 import { ClockStore } from './stores/ClockStore';
 
 const myContainer = new Container();
+myContainer.bind<NetworkStore>(Types.NetWorkStore).to(NetworkStore).inSingletonScope();
 myContainer.bind<WinLineStore>(Types.WinLineStore).to(WinLineStore).inSingletonScope()
 myContainer.bind<ReelStore>(Types.ReelStore).to(ReelStore).inSingletonScope()
 myContainer.bind<IFsm>(Types.FSM).to(FSM).inSingletonScope()
 myContainer.bind<UIStore>(Types.UIStore).to(UIStore).inSingletonScope();
-myContainer.bind<NetworkStore>(Types.NetWorkStore).to(NetworkStore).inSingletonScope();
 myContainer.bind<ClockStore>(Types.ClockStore).to(ClockStore).inSingletonScope();
 
 export { myContainer }
