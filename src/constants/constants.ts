@@ -1,7 +1,7 @@
 import { DeepReadonly } from 'ts-essentials';
 import { Types } from '../types/types';
 import TextureName = Types.TextureName;
-import { WinLineStore } from '../stores/WinLineStore';
+
 export const TEXTURES: Readonly<TextureName[]> = [
   'five.png',
   'grape.png',
@@ -17,20 +17,6 @@ export const winCombinations: Types.WinCombination = {
   'ring':  { symbolId: 3, texture: 'ring.png', },
   'zero':  { symbolId: 4, texture: 'zero.png', },
 }
-
-const WIN_LINES = [
-  [0, 0, 0, 0],
-  [1, 1, 1, 1],
-
-]
-
-export const WIN_TEXTURES: Readonly<TextureName[]> = [
-  'five_transparent.png',
-  'grape_transparent.png',
-  'fruit_transparent.png',
-  'ring_transparent.png',
-  'zero_transparent.png',
-]
 
 export const COUNT_OF_REELS = 4
 
@@ -51,7 +37,7 @@ export const REELS_MASK: Types.PointCords & Types.Size = {
   width: 1020,
   height: 670,
   x: 0,
-  y: -100,
+  y: -50,
 }
 
 export const SCENE_OPTIONS = {
@@ -59,16 +45,19 @@ export const SCENE_OPTIONS = {
 }
 
 export const SCENE_SIZE: Readonly<Types.Size> = {
-  width: 1920 / 1.5,
-  height: 1080,
+  width: 1800,
+  height: 1024,
 }
 
-export const STAGE_SCALE: Types.PointCords = { x: 0.7, y: 0.7 }
+export const STAGE_SCALE: Types.PointCords = { x: 0.8, y: 0.8 }
+export const STAGE_CORDS: Types.PointCords = { x: 100, y: 0 }
 
 export const REELS_SCALE: Types.PointCords = { x: 0.67, y: 0.72 }
 export const REELS_CORDS: Types.PointCords = { x: 639, y: -85, }
-export const  TRANSPARENT_SYMBOL_BIAS_LANDSCAPE: Types.PairWithCord[] = [
-  [120, 102 + 20, 'fruit_transparent.png', 1.6],
+
+export const BORDER_SCALE: Types.PointCords = {x: 1.1, y: 1.15 }
+export const TRANSPARENT_SYMBOL_BIAS_LANDSCAPE: Types.PairWithCord[] = [
+  [120, 102 + 12, 'fruit_transparent.png', 1.6],
   [120 + 0.9, 103 + -2.5, 'grape_transparent.png', 1.6],
   [120, 104 + 20, 'zero_transparent.png', 1.6],
   [120 + -5, 105 + 10, 'ring_transparent.png', 1.6],
@@ -80,10 +69,18 @@ export const REELS_BORDER: Types.PointCords = {
 }
 
 export const SPIN_BUTTON: Types.PointCords & Types.Size = {
-  x: 1920 / 2.85,
-  y: 750,
+  x: 970,
+  y: 920,
   width: 256,
   height: 256,
+}
+
+export const ClockData = {
+  anchor: CENTER_ANCHOR,
+  scale: 0.31,
+  width: 600,
+  x: 240,
+  y: 230,
 }
 
 export const STATES: DeepReadonly<Types.RegisteredData> = [

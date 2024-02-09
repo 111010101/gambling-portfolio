@@ -1,7 +1,7 @@
 import { Types } from '../types/types';
 import { IFsm, StateData } from '../interfaces/interfaces';
 import { injectable } from 'inversify';
-let instance: FSM
+
 @injectable()
 export class FSM implements IFsm {
   private _states: Types.State[] = []
@@ -29,6 +29,7 @@ export class FSM implements IFsm {
     if (!stateData) {
       throw new Error(`The ${newState} doesn\'t exist in subscribers`)
     }
+
     const { store, state } = stateData
     return store
       .update(state)

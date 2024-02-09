@@ -1,8 +1,8 @@
-import { IReelData, IStore, ReelSymbolData } from '../interfaces/interfaces';
+import * as interfaces from '../interfaces/interfaces';
 import { COUNT_OF_REELS, REEL_CORDS, TEXTURES } from '../constants/constants';
 import { observable, action, makeAutoObservable } from 'mobx';
 import { gsap } from "gsap";
-import { Types } from '../types/types';
+import { StateTypes, Types } from '../types/types';
 import { BlurFilter } from 'pixi.js';
 import { injectable } from 'inversify';
 import { UIStore } from './UIStore';
@@ -10,9 +10,10 @@ import { myContainer } from '../inversify.config';
 import TextureName = Types.TextureName;
 import { getShuffledReelSymbols } from '../functions/PureFunctions';
 
-let instance: ReelStore
+type ReelSymbolData = Types.ReelSymbolData
+
 @injectable()
-export class ReelStore implements IStore {
+export class ReelStore implements interfaces.IStore {
   readonly filterStrength = 2
   public countOfReels: number = COUNT_OF_REELS
 
@@ -24,12 +25,11 @@ export class ReelStore implements IStore {
   @observable
   public readonly _textures: TextureName[] = TEXTURES.slice()
   @observable
-  private readonly _reels: IReelData[] = ReelStore.createReels(REEL_CORDS)
+  private readonly _reels: interfaces.IReelData[] = ReelStore.createReels(REEL_CORDS)
 
   @observable
   private _filters: BlurFilter[] = []
   private _filter: BlurFilter[] | null = null
-  private _blurFilter = () => new BlurFilter(this.filterStrength)
 
   constructor() {
     makeAutoObservable(this, undefined, { deep: true })
@@ -43,12 +43,12 @@ export class ReelStore implements IStore {
         await this.spinReels()
         await uiStore.update('IdleState')
     }
-    return Promise.resolve('NetworkState')
+    return Promise.resolve(StateTypes.WIN_LINE)
   }
 
   private spin(reelIndex: number): Promise<void> {
     return new Promise(resolve => {
-      setTimeout( () => {
+      setTimeout(() => {
         this.setSpinProgress(true)
         this.spinReel(reelIndex).then(resolve)
       }, reelIndex * 50)
@@ -64,7 +64,7 @@ export class ReelStore implements IStore {
     return Promise.all(promises)
   }
 
-  private async spinReel(reelIndex: number,  spinDuration: number = 0.1): Promise<void> {
+  private async spinReel(reelIndex: number, spinDuration: number = 0.1): Promise<void> {
     const reel = this._reels[reelIndex];
     const symbolHeight = 240; // Высота одного символа
     const reelHeight = 240 * 5; // Общая высота барабана
@@ -113,8 +113,10 @@ export class ReelStore implements IStore {
     })
   }
 
+  @action
   spinSymbol(
-    reel: IReelData,symbol: ReelSymbolData,
+    reel: interfaces.IReelData,
+    symbol: ReelSymbolData,
     symbolHeight: number,
     reelHeight: number,
     duration: number,
@@ -134,7 +136,7 @@ export class ReelStore implements IStore {
           })
           if (symbol.y >= reelHeight) {
             symbol.y -= reelHeight; // Move the symbol to the beginning
-            const [texture, index] = this.getRandomTexture()
+            const [texture] = this.getRandomTexture()
             symbol.texture = texture
           }
           this.setSpinProgress(false)
@@ -170,7 +172,7 @@ export class ReelStore implements IStore {
     return this._reels
   }
 
-  private static createReels({ x, y }: Types.PointCords): IReelData[] {
+  private static createReels({ x, y }: Types.PointCords): interfaces.IReelData[] {
     return [...new Array(COUNT_OF_REELS)].map((_, reelId) => {
       return {
         x: x * reelId,
@@ -179,21 +181,6 @@ export class ReelStore implements IStore {
         y: y * reelId,
       }
     })
-  }
-  @action
-  private static getShuffledReelSymbols(textures: TextureName[], x: number, y: number, reelId: number): ReelSymbolData[] {
-    return textures.concat(textures[0]).slice()
-      .sort(() => Math.random() - 0.5)
-      .map((texture, symbolId) => {
-        return {
-          reelId,
-          symbolId,
-          x: x,
-          y: y * symbolId,
-          texture,
-          filter: null,
-        }
-      })
   }
 
   @observable

@@ -1,13 +1,14 @@
 import { JSX } from 'react';
-import { BlurFilter } from 'pixi.js';
+import { BlurFilter, Texture } from 'pixi.js';
 import { Container, Sprite } from '@pixi/react';
-import { CENTER_ANCHOR, SYMBOL_SIZE, TRANSPARENT_SYMBOL_BIAS_LANDSCAPE } from '../../constants/constants';
+import { SYMBOL_SIZE } from '../../constants/constants';
 import { Types } from '../../types/types';
 import { myContainer } from '../../inversify.config';
 import { ReelStore } from '../../stores/ReelStore';
 import { compareImageReducer } from '../../functions/PureFunctions';
 import { WinLineStore } from '../../stores/WinLineStore';
 import { observer } from 'mobx-react-lite';
+import { WinSymbol} from './WinSymbol';
 
 interface ISymbolProps {
   texture: Types.TextureName
@@ -15,41 +16,47 @@ interface ISymbolProps {
   filters: BlurFilter[] | null
   transparentTexture?: Types.TextureName
   index: number
+
+  winLineStore: WinLineStore
 }
 
+const reelStore = myContainer.get<ReelStore>(Types.ReelStore)
 
-export const Symbol = observer (({ y, texture, filters, index }: ISymbolProps): JSX.Element | never  => {
-  const reelStore = myContainer.get<ReelStore>(Types.ReelStore)
+
+const id = setTimeout(() => {
   const winLineStore = myContainer.get<WinLineStore>(Types.WinLineStore)
+  winLineStore.updateTransparentSymbol()
+  clearTimeout(id)
+}, 200)
+
+export const Symbol = observer (({ winLineStore, y, texture, filters, index }: ISymbolProps): JSX.Element | never  => {
+
   const textureName = texture.split('.')[0]
   let { textureName: foundedTexture } = reelStore
     .textures
     .reduce(compareImageReducer, { texture: 'empty.png', textureName, })
 
   const { width, height } = SYMBOL_SIZE
-  let [biasX, biasY, name, _, scale] = TRANSPARENT_SYMBOL_BIAS_LANDSCAPE.reduce((data, [x, y, symbolName, scale,]) => {
-    const [foundedX, foundedY, name, isFound] = data
-    if (isFound) {
-      return data
+  const [biasX, biasY, _, scale] = winLineStore.symbolData.reduce((data, [x1, x2, symbolName, scale1]) => {
+    const [x0, y0, name, scale0] = data
+    const [textureName1] = name.split('.')
+    const [textureName2] = symbolName.split('.')
+    if (foundedTexture.includes(textureName1)) {
+      return [x0, y0, name, scale0]
+    } else if (foundedTexture.includes(textureName2)) {
+      return [x1, x2, name, scale1]
     }
-    const [textureName] = symbolName.split('.')
-    if (foundedTexture.includes(textureName)) {
-      return [x, y, symbolName, true, scale]
-    }
-    return [x, y, symbolName, false, scale]
-  }, [0, 0, 'false', false, 2])
+    return data
+  })
 
   return (
     <Container>
-      <Sprite y={y} zIndex={index} image={texture} width={width} height={height}  filters={filters} />
-      <Sprite y={y + biasY} image={foundedTexture} x={biasX}
-               anchor={CENTER_ANCHOR}
-               zIndex={(index + 1) ** (index + 1)}
-               width={width / 1.5}
-               height={height / 1.51}
-               scale={scale}
-               blendMode={winLineStore.blendMode} />
+      <Sprite y={y}  image={texture} width={width} height={height}  filters={filters} />
+      <WinSymbol
+        x={biasX} y={y + biasY} texture={Texture.from(texture)}
+        zIndex={(index + 1) ** (index + 1)}
+        scale={ { x: scale, y: scale } }
+        filters={(index > 0 && index < 4 ) ? winLineStore.filter : null}/>
     </Container>
   )
 })
-

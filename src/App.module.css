@@ -1,5 +1,11 @@
 canvas {
-    display: block;
+    width: auto;
+    height: auto;
     margin: 0 auto;
-    padding-right: 100px;
+}
+
+body {
+    margin: 0;
+    align-items: center;
+    justify-content: center;
 }

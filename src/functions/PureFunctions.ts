@@ -1,8 +1,12 @@
 import { Types } from '../types/types';
-import { ReelSymbolData } from '../interfaces/interfaces';
 import TextureName = Types.TextureName;
+import { TRANSPARENT_SYMBOL_BIAS_LANDSCAPE } from '../constants/constants';
+type PairWithCord = Types.PairWithCord
+type ReelSymbolData = Types.ReelSymbolData
+
 export function compareImageReducer(acc: Types.FoundedTransparentTexture, nextTexture: Types.TextureName | string): Types.FoundedTransparentTexture {
   const { texture, textureName } = acc
+
   if (texture === textureName) {
     return { texture, textureName, }
   }
@@ -26,4 +30,12 @@ export function getShuffledReelSymbols(textures: TextureName[], x: number, y: nu
         filter: null,
       }
     })
+}
+
+export const mapWinSymbols = (): [number, number, string, number][] => {
+  return  TRANSPARENT_SYMBOL_BIAS_LANDSCAPE.map(([x, y, name, scale]) => {
+    return [
+      x, y, name, scale
+    ]
+  })
 }

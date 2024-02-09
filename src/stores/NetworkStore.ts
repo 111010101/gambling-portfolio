@@ -4,6 +4,8 @@ import { injectable } from 'inversify';
 import { action, makeAutoObservable, observable } from 'mobx';
 import { winCombinations } from '../constants/constants'
 import SymbolData = Types.SymbolData;
+import { myContainer } from '../inversify.config';
+import { UIStore } from './UIStore';
 type WinCombination = Types.WinCombination;
 type RangeToFour = Types.RangeToFour
 type Symbols = Types.Symbols
@@ -16,14 +18,43 @@ export class NetworkStore implements IStore {
   @observable
   private readonly winCombinations = Object.values(winCombinations)
 
-  @observable
-  public symbols: Symbols = {
-    0: 'five.png',
-    1: 'grape.png',
-    2: 'fruit.png',
-    3: 'ring.png',
-    4: 'zero.png',
-  }
+  public newSymbols: Symbols[] = [
+    [
+      'five.png',
+      'grape.png',
+      'fruit.png',
+      'ring.png',
+      'zero.png',
+    ],
+    [
+      'ring.png',
+      'grape.png',
+      'zero.png',
+      'five.png',
+      'fruit.png',
+    ],
+    [
+      'ring.png',
+      'fruit.png',
+      'grape.png',
+      'five.png',
+      'zero.png',
+    ],
+    [
+      'five.png',
+      'grape.png',
+      'fruit.png',
+      'ring.png',
+      'zero.png',
+    ],
+    [
+      'zero.png',
+      'ring.png',
+      'fruit.png',
+      'grape.png',
+      'five.png',
+    ],
+  ]
 
 
 
