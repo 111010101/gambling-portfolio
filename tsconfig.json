@@ -2,8 +2,9 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "target": "es5",
+    "target": "es6",
     "lib": [
+      "es2021.intl",
       "dom",
       "dom.iterable",
       "esnext"

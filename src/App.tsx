@@ -67,8 +67,6 @@ const App = observer(({ textures }: IApp) => {
         <Sprite image={'clock_background.png'}
                 x={SPIN_BUTTON.x - 282}
                 y={SPIN_BUTTON.y + -160}
-          //   width={SPIN_BUTTON.width}
-          // height={SPIN_BUTTON.height}
                 scale={0.3}
                 filters={[colorFoBorder]}
         />
@@ -87,7 +85,6 @@ const App = observer(({ textures }: IApp) => {
         />
         <Clock textures={textures} />
       </Container>
-
     </Stage>
   )
 })

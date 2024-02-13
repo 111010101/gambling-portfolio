@@ -1,17 +1,18 @@
 import { IStore } from '../interfaces/interfaces';
-import { injectable } from 'inversify';
+import { injectable, multiInject, inject } from 'inversify';
 import { gsap } from 'gsap';
 import { StateTypes, Types } from '../types/types';
-import { action, get, makeAutoObservable, observable } from 'mobx';
+import { action, makeAutoObservable, observable } from 'mobx';
 import { BLEND_MODES, Texture } from 'pixi.js';
 import { TRANSPARENT_SYMBOL_BIAS_LANDSCAPE } from '../constants/constants';
 import { ColorMatrixFilter } from 'pixi.js';
 import { UIStore } from './UIStore';
 import { myContainer } from '../inversify.config';
-import { NetworkStore } from './NetworkStore';
-import { mapWinSymbols } from '../functions/PureFunctions';
+import { NetworkRequest } from '../network/Network';
 
 type Symbols = Types.Symbols
+
+const requestDelay = 100
 
 @injectable()
 export class WinLineStore implements IStore {
@@ -70,6 +71,9 @@ export class WinLineStore implements IStore {
 
   constructor() {
     makeAutoObservable(this, undefined, { deep: true })
+    setTimeout(() => {
+      this.updateWinLineData()
+    }, requestDelay)
     this.filter = [new ColorMatrixFilter()]
     this.winSymbolsView = this.newSymbols[Math.floor(Math.random()*this.newSymbols.length)];
     this.symbolData = TRANSPARENT_SYMBOL_BIAS_LANDSCAPE.slice().sort().map(([x, y, symbolName, scale]) => {
@@ -156,8 +160,9 @@ export class WinLineStore implements IStore {
     return this._numbers.slice()
   }
 
-  get comma() {
-    return this._numbers[this.numbers.length - 1]
+  updateWinLineData(): void {
+    const netWorkResponse = myContainer.get<NetworkRequest>(Types.NetworkRequest)
+    netWorkResponse.fetch()
   }
 
 }

@@ -2,8 +2,10 @@ import { BlurFilter, Point } from 'pixi.js';
 import { DeepReadonly } from 'ts-essentials';
 
 export namespace Types {
-  type ImageType = '.png' | '.jpeg' | 'jpg' | '.webp'
+  export type ImageType = '.png' | '.jpeg' | 'jpg' | '.webp'
   export type RotationData = [Math["PI"], number]
+  export type Currency = 'USD' | 'EUR' | 'UAH'  | 'DEMO'
+  export type UserAction = 'spin' | 'initFreeSpin' | 'FreeSpin' | 'FreeSpinEnd'
   export type SymbolData = { symbolId: number, texture: TextureName, }
   export type RangeToFour = 0 | 1 | 2 | 3 | 4
   export type WinCombination = {
@@ -14,6 +16,7 @@ export namespace Types {
   export type State = `${string}${'State'}`
   export type PointCords = Readonly<Pick<Point, "x" | "y">>
   export type PairWithCord = [number, number, string, number]
+  export type HttpRequest = `${'http' | 'https'}${string}`
   export type Size = Readonly<{
     width: number
     height: number
@@ -38,6 +41,7 @@ export namespace Types {
   export const WinLineStore = Symbol.for('WinLineStore')
   export const IStore = Symbol.for('IStore')
   export const ClockStore = Symbol.for('ClockStore')
+  export const NetworkRequest = Symbol.for('NetworkRequest')
 }
 
 export namespace StateTypes {
