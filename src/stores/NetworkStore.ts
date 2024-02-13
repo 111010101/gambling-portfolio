@@ -4,9 +4,6 @@ import { injectable } from 'inversify';
 import { action, makeAutoObservable, observable } from 'mobx';
 import { winCombinations } from '../constants/constants'
 import SymbolData = Types.SymbolData;
-import { myContainer } from '../inversify.config';
-import { UIStore } from './UIStore';
-type WinCombination = Types.WinCombination;
 type RangeToFour = Types.RangeToFour
 type Symbols = Types.Symbols
 @injectable()
@@ -92,11 +89,6 @@ export class NetworkStore implements IStore {
   public get getWinCombination(): SymbolData {
     return this.winCombinations[1]
   }
-
-  isShouldTransitToNewState(states: Types.State[]): boolean {
-    return !Math.random();
-  }
-
 
 
 }

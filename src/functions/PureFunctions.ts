@@ -1,10 +1,9 @@
 import { Types } from '../types/types';
-import TextureName = Types.TextureName;
 import { TRANSPARENT_SYMBOL_BIAS_LANDSCAPE } from '../constants/constants';
-type PairWithCord = Types.PairWithCord
+type TextureName = Types.TextureName
 type ReelSymbolData = Types.ReelSymbolData
-
-export function compareImageReducer(acc: Types.FoundedTransparentTexture, nextTexture: Types.TextureName | string): Types.FoundedTransparentTexture {
+type TransparentTexture = Types.FoundedTransparentTexture
+export function compareImageReducer(acc: TransparentTexture, nextTexture: TextureName | string): TransparentTexture {
   const { texture, textureName } = acc
 
   if (texture === textureName) {
@@ -16,6 +15,15 @@ export function compareImageReducer(acc: Types.FoundedTransparentTexture, nextTe
   }
   return { textureName, texture: nextTexture as Types.TextureName }
 }
+
+export function shuffle<T>(array: T[]): T[] {
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array
+}
+
 
 export function getShuffledReelSymbols(textures: TextureName[], x: number, y: number, reelId: number): ReelSymbolData[] {
   return textures.concat(textures[0]).slice()

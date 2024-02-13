@@ -30,7 +30,6 @@ export class ClockStore implements IStore {
 
   constructor() {
     makeAutoObservable(this, undefined, { deep: true })
-    //setTimeout(() => this.updateTime(), 500)
   }
 
   update(state: State): Promise<State> {

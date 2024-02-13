@@ -32,7 +32,7 @@ export const Hours = observer(({ y, scale, x, filters }: DigitsProps) => {
   return (
     <Container scale={scale} x={x} y={y}>
       <Sprite scale={reduceSix(a)} x={-15}  texture={store.hourDigitOne} filters={filters}/>
-      <Sprite scale={reduceSix(b)} x={170} y={5} texture={store.hourDigitTwo}/>
+      <Sprite scale={reduceSix(b)} x={170} y={5} texture={store.hourDigitTwo} filters={filters}/>
     </Container>
   )
 })
@@ -42,7 +42,7 @@ export const Minutes = observer(({ x, y, filters, scale }: DigitsProps) => {
   return (
     <Container x={x} y={y} scale={scale}>
       <Sprite scale={reduceSix(a)} x={-10}  texture={store.minuteDigitOne} filters={filters}/>
-      <Sprite scale={reduceSix(b)} x={170} y={10} texture={store.minuteDigitTwo} filters={filters}/>
+      <Sprite scale={reduceSix(b)} x={170}  texture={store.minuteDigitTwo} filters={filters}/>
     </Container>
   )
 })

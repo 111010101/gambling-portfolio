@@ -1,5 +1,8 @@
 import { Types } from '../types/types';
 import { Texture } from 'pixi.js';
+import Currency = Types.Currency;
+
+type UserAction = Types.UserAction
 
 export interface IFsm {
   readonly states: Types.State[]
@@ -28,7 +31,18 @@ export type StateData = {
   store: IStore
 }
 
-export interface INetwork {
+export interface INetworkRequest<T> {
+
+  token: string
+  url: string
+
+  currency: Currency
+
+  fetch(): Promise<T | void>
+
+  balance: number
+
+  nextActions: UserAction[]
 
 }
 

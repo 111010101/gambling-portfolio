@@ -9,6 +9,7 @@ import { REELS_MASK } from '../../constants/constants';
 import { myContainer } from '../../inversify.config';
 import { Types } from '../../types/types';
 import { WinLineStore } from '../../stores/WinLineStore';
+import { shuffle} from '../../functions/PureFunctions';
 
 interface IReelsProps {
   readonly reelsX: number
@@ -24,7 +25,7 @@ export const Reels = observer(({ reelsX, reelsY, scale, resources }: IReelsProps
   const [key1, key2, key3, key4] = reelStore.reels.map(({ index }) => (1 + index) * Math.random())
   const [reelData1, reelData2, reelData3, reelData4] = reelStore.reels
   const [index1, index2, index3, index4] = reelStore.reels.map((_, index) => index)
-  const [[x1], [x2], [x3], [x4]] = reelStore
+  const [[x1, y1], [x2, y2], [x3, y3], [x4, y4]] = reelStore
     .reels
     .map(({ symbols }, index) => {
       const { x, y } = symbols[index]

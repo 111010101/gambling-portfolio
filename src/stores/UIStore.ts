@@ -14,11 +14,11 @@ export class UIStore implements IStore {
   public spinButtonActive: boolean = true
 
   @observable
-  public rotation: number
+  public rotation: number = 0
 
   constructor() {
     makeAutoObservable(this, undefined, { deep: true })
-    this.rotation = Math.PI * 2
+    this.setRotation(Math.PI * 2)
     window.addEventListener('resize', this.updateRotation.bind(this))
   }
 
@@ -27,18 +27,23 @@ export class UIStore implements IStore {
     let currentState: State = 'EmptyState'
     switch (state) {
       case 'IdleState':
-        this.spinButtonActive = true;
+        this.spinButtonActive = true
         currentState = 'IdleState' as State
-        break;
+        break
       case 'WinLineState':
       case 'SpinState':
       case 'NetworkState':
       case 'EmptyState':
-        this.spinButtonActive = false;
-       break
+        this.spinButtonActive = false
+        break
     }
 
     return state
+  }
+
+  @action
+  setRotation(radius: number) {
+    this.rotation = radius
   }
 
   @action

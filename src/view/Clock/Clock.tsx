@@ -14,10 +14,7 @@ interface INumber {
   textures: Texture[]
 }
 
-
 const { scale, anchor, y, x } = ClockData
-
-
 const colorFilter = new ColorMatrixFilter()
 colorFilter.brightness(0.8, false)
 
@@ -34,8 +31,8 @@ export const Clock = observer(({ textures }: INumber): JSX.Element => {
     <Sprite anchor={anchor} scale={scale}  x={x} y={y} texture={Texture.from('clock_border.png')}>
       <Hours scale={0.76} y={-120} x={-500} filters={[colorFilter]} />
       <Digit scale={0.76} y={-180} x={-300} texture={dot}/>
-      <Minutes  scale={0.76} y={-120} x={-180} filters={[colorFilter]} />
-      <Digit scale={0.76} y={-180}  x={20} texture={dot} />
+      <Minutes  scale={0.76} y={-120} x={-160} filters={[colorFilter]} />
+      <Digit scale={0.76} y={-180}  x={30} texture={dot} />
       <Seconds scale={0.76} y={-120} x={160} filters={[colorFilter]}/>
     </Sprite>
   )
